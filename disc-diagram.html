@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TPU Lenticular Disc - Construction Diagram</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <style>
+        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #1e1e1e; color: #ddd; overflow: hidden; }
+        h2 { text-align: center; margin: 10px 0; color: #4daafc; font-weight: 500; font-size: 1.2rem; }
+        .container { display: flex; flex-direction: column; height: calc(100vh - 100px); }
+        .view-wrapper { flex: 1; position: relative; margin: 5px 20px; border: 1px solid #444; border-radius: 4px; overflow: hidden; background: #111; }
+        .label { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.8); padding: 8px 15px; border-radius: 6px; font-size: 14px; font-weight: bold; border: 1px solid #333; z-index: 10; pointer-events: none; }
+        .instructions { position: absolute; bottom: 15px; right: 15px; background: rgba(0,0,0,0.6); padding: 5px 10px; border-radius: 4px; font-size: 12px; color: #aaa; pointer-events: none; }
+        canvas { display: block; }
+        .footer { text-align: center; padding: 15px; color: #aaa; font-size: 14px; background: #1a1a1a; border-top: 1px solid #333; }
+        .highlight { color: #ffcc00; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h2>TPU Inflatable Lenticular Disc — Construction vs Inflated Geometry</h2>
+    
+    <div class="container">
+        <!-- Top View: Flat Construction -->
+        <div class="view-wrapper" id="construction-container">
+            <div class="label">1. CONSTRUCTION LAYOUT (Everything Flat on Floor)</div>
+            <div class="instructions">Drag to rotate • Scroll to zoom</div>
+        </div>
+        
+        <!-- Bottom View: Inflated Shape -->
+        <div class="view-wrapper" id="inflated-container">
+            <div class="label">2. INFLATED SHAPE (with 4 tethers)</div>
+            <div class="instructions">Drag to rotate • Scroll to zoom</div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <strong>Why there is no pleating:</strong> The rectangular sidewall band has two long edges of <span class="highlight">identical length</span> (equal to the circle circumference).<br>
+        Because you weld them to the circles while everything is <span class="highlight">flat on the floor</span>, there is no differential length. The curving only happens <em>after</em> inflation.
+    </div>
+
+    <script>
+        // Colors
+        const fabricColor = 0x2b78e4; // Blue for top/bottom
+        const sidewallColor = 0xe67e22; // Orange for sidewall
+        const tetherColor = 0xe74c3c; // Red for tethers
+        const weldColor = 0xffcc00; // Yellow for weld lines
+
+        // --- SCENE 1: FLAT CONSTRUCTION ---
+        function initConstructionScene() {
+            const container = document.getElementById('construction-container');
+            const scene = new THREE.Scene();
+            
+            // Camera
+            const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 1, 5000);
+            camera.position.set(0, 600, 400);
+            
+            // Renderer
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+            
+            // Controls
+            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.target.set(0, 0, 0);
+
+            // Lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+            const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            dirLight.position.set(100, 500, 200);
+            scene.add(dirLight);
+
+            // Group to hold all flat pieces
+            const layoutGroup = new THREE.Group();
+
+            // Dimensions (scaled down for visualization)
+            const radius = 100;
+            const circumference = 2 * Math.PI * radius; // ~628
+            const sidewallHeight = 40;
+
+            // Materials
+            const circleMat = new THREE.MeshPhongMaterial({ color: fabricColor, side: THREE.DoubleSide, shininess: 10 });
+            const sidewallMat = new THREE.MeshPhongMaterial({ color: sidewallColor, side: THREE.DoubleSide, shininess: 10 });
+            const weldMat = new THREE.LineBasicMaterial({ color: weldColor, linewidth: 3 });
+
+            // 1. Top Circle
+            const topCircle = new THREE.Mesh(new THREE.CircleGeometry(radius, 64), circleMat);
+            topCircle.rotation.x = -Math.PI / 2;
+            topCircle.position.set(-radius - 20, 0, -100);
+            layoutGroup.add(topCircle);
+
+            // Weld line for top circle
+            const circleEdges = new THREE.EdgesGeometry(new THREE.CircleGeometry(radius, 64));
+            const topWeld = new THREE.LineSegments(circleEdges, weldMat);
+            topWeld.rotation.x = -Math.PI / 2;
+            topWeld.position.set(-radius - 20, 1, -100); // Slightly above to prevent z-fighting
+            layoutGroup.add(topWeld);
+
+            // 2. Bottom Circle
+            const bottomCircle = new THREE.Mesh(new THREE.CircleGeometry(radius, 64), circleMat);
+            bottomCircle.rotation.x = -Math.PI / 2;
+            bottomCircle.position.set(radius + 20, 0, -100);
+            layoutGroup.add(bottomCircle);
+
+            // Weld line for bottom circle
+            const bottomWeld = new THREE.LineSegments(circleEdges, weldMat);
+            bottomWeld.rotation.x = -Math.PI / 2;
+            bottomWeld.position.set(radius + 20, 1, -100);
+            layoutGroup.add(bottomWeld);
+
+            // 3. Sidewall Band (Rectangle)
+            const bandGeo = new THREE.PlaneGeometry(circumference, sidewallHeight);
+            const band = new THREE.Mesh(bandGeo, sidewallMat);
+            band.rotation.x = -Math.PI / 2;
+            band.position.set(0, 0, radius + 50);
+            layoutGroup.add(band);
+
+            // Weld lines for sidewall band (top and bottom edges)
+            const bandEdges = new THREE.EdgesGeometry(bandGeo);
+            const bandWeld = new THREE.LineSegments(bandEdges, weldMat);
+            bandWeld.rotation.x = -Math.PI / 2;
+            bandWeld.position.set(0, 1, radius + 50);
+            layoutGroup.add(bandWeld);
+
+            // Center the group
+            scene.add(layoutGroup);
+
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+                controls.update();
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            // Resize handler
+            window.addEventListener('resize', () => {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+        }
+
+        // --- SCENE 2: INFLATED SHAPE ---
+        function initInflatedScene() {
+            const container = document.getElementById('inflated-container');
+            const scene = new THREE.Scene();
+            
+            // Camera
+            const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 1, 5000);
+            camera.position.set(250, 200, 350);
+            
+            // Renderer
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+            
+            // Controls
+            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.autoRotate = true;
+            controls.autoRotateSpeed = 1.0;
+            controls.target.set(0, 0, 0);
+
+            // Lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+            const dirLight1 = new THREE.DirectionalLight(0xffffff, 0.7);
+            dirLight1.position.set(200, 300, 200);
+            scene.add(dirLight1);
+            const dirLight2 = new THREE.DirectionalLight(0xffffff, 0.4);
+            dirLight2.position.set(-200, -100, -200);
+            scene.add(dirLight2);
+
+            // Dimensions
+            const radius = 100;
+            const sidewallHeight = 40;
+            const bulgeHeight = 45; // How much the top/bottom bulge out
+
+            // Materials (slightly transparent to look like inflated fabric)
+            const circleMat = new THREE.MeshPhongMaterial({ 
+                color: fabricColor, 
+                transparent: true, 
+                opacity: 0.9,
+                shininess: 30,
+                side: THREE.DoubleSide
+            });
+            const sidewallMat = new THREE.MeshPhongMaterial({ 
+                color: sidewallColor, 
+                transparent: true, 
+                opacity: 0.9,
+                shininess: 20,
+                side: THREE.DoubleSide
+            });
+            const tetherMat = new THREE.MeshPhongMaterial({ color: tetherColor });
+            const weldMat = new THREE.LineBasicMaterial({ color: weldColor, linewidth: 2 });
+
+            const balloonGroup = new THREE.Group();
+
+            // 1. Top Dome (Bulged Circle)
+            // We use a sphere geometry scaled flat to simulate the lenticular bulge
+            const topDomeGeo = new THREE.SphereGeometry(radius, 64, 32, 0, Math.PI * 2, 0, Math.PI / 2);
+            const topDome = new THREE.Mesh(topDomeGeo, circleMat);
+            topDome.scale.set(1, bulgeHeight / radius, 1);
+            topDome.position.y = sidewallHeight / 2;
+            balloonGroup.add(topDome);
+
+            // 2. Bottom Dome
+            const bottomDome = new THREE.Mesh(topDomeGeo, circleMat);
+            bottomDome.scale.set(1, bulgeHeight / radius, 1);
+            bottomDome.rotation.x = Math.PI; // Flip upside down
+            bottomDome.position.y = -sidewallHeight / 2;
+            balloonGroup.add(bottomDome);
+
+            // 3. Sidewall (Cylinder)
+            // Note: In reality, internal pressure makes the sidewall bulge slightly outward too.
+            // We simulate this with a cylinder that has a slight curve (using a SphereGeometry sliced)
+            // or just a straight cylinder for simplicity. We'll use a straight cylinder here.
+            const sidewallGeo = new THREE.CylinderGeometry(radius, radius, sidewallHeight, 64, 1, true);
+            const sidewall = new THREE.Mesh(sidewallGeo, sidewallMat);
+            balloonGroup.add(sidewall);
+
+            // 4. Weld Seams (Visual rings where sidewall meets domes)
+            const ringGeo = new THREE.EdgesGeometry(new THREE.CircleGeometry(radius, 64));
+            
+            const topWeld = new THREE.LineSegments(ringGeo, weldMat);
+            topWeld.rotation.x = Math.PI / 2;
+            topWeld.position.y = sidewallHeight / 2;
+            balloonGroup.add(topWeld);
+
+            const bottomWeld = new THREE.LineSegments(ringGeo, weldMat);
+            bottomWeld.rotation.x = Math.PI / 2;
+            bottomWeld.position.y = -sidewallHeight / 2;
+            balloonGroup.add(bottomWeld);
+
+            // 5. Tethers (4 points)
+            const tetherLength = 150;
+            for (let i = 0; i < 4; i++) {
+                const angle = (i * Math.PI) / 2; // 0, 90, 180, 270 degrees
+                
+                // Tether line
+                const tetherGeo = new THREE.CylinderGeometry(1.5, 1.5, tetherLength, 8);
+                const tether = new THREE.Mesh(tetherGeo, tetherMat);
+                
+                // Position and rotate to point outward from the sidewall
+                tether.rotation.z = Math.PI / 2;
+                tether.rotation.y = -angle;
+                
+                tether.position.set(
+                    Math.cos(angle) * (radius + tetherLength/2),
+                    0, // Attached at equator (middle of sidewall)
+                    Math.sin(angle) * (radius + tetherLength/2)
+                );
+                
+                balloonGroup.add(tether);
+
+                // Attachment patch (small square on sidewall)
+                const patchGeo = new THREE.PlaneGeometry(15, 15);
+                const patch = new THREE.Mesh(patchGeo, new THREE.MeshPhongMaterial({color: 0x333333}));
+                patch.position.set(
+                    Math.cos(angle) * (radius + 0.5),
+                    0,
+                    Math.sin(angle) * (radius + 0.5)
+                );
+                patch.rotation.y = -angle + Math.PI/2;
+                balloonGroup.add(patch);
+            }
+
+            scene.add(balloonGroup);
+
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+                controls.update(); // Required for autoRotate
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            // Resize handler
+            window.addEventListener('resize', () => {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+        }
+
+        // Initialize both scenes
+        window.onload = () => {
+            initConstructionScene();
+            initInflatedScene();
+        };
+    </script>
+</body>
+</html>

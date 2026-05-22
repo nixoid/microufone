@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TPU Envelope Geometry Options &mdash; 3D Renders</title>
+<style>
+  :root {
+    --bg: #0b0d12;
+    --bg-elev: #141821;
+    --bg-card: #181c26;
+    --border: #262b38;
+    --text: #e8ecf4;
+    --text-dim: #9aa3b5;
+    --text-mute: #6a7388;
+    --accent: #ffb968;
+    --accent-soft: rgba(255, 185, 104, 0.18);
+    --seam: #0a0a0a;
+    --fiberglass: #b8c4a8;
+    --tether: #c4a882;
+    --anchor: #6a7388;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  body {
+    background:
+      radial-gradient(1200px 600px at 20% -10%, rgba(255, 185, 104, 0.07), transparent 60%),
+      radial-gradient(900px 500px at 90% 110%, rgba(110, 231, 168, 0.05), transparent 60%),
+      var(--bg);
+  }
+  header {
+    padding: 28px 32px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  header h1 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  header p {
+    margin: 0;
+    color: var(--text-dim);
+    font-size: 14px;
+  }
+  header p a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--accent-soft);
+  }
+  main {
+    padding: 24px 32px 32px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: 1100px) {
+    main { grid-template-columns: 1fr; }
+  }
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  }
+  .card-head {
+    padding: 14px 16px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .card-head h2 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+  .card-head .sub {
+    margin-top: 2px;
+    font-size: 12px;
+    color: var(--text-mute);
+  }
+  .palette {
+    background: rgba(255, 255, 255, 0.025);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 156px;
+  }
+  .palette svg {
+    width: 100%;
+    max-width: 420px;
+    height: 128px;
+    display: block;
+    overflow: visible;
+    color: var(--text-dim);
+  }
+  .palette .piece-stroke { stroke: rgba(0, 0, 0, 0.45); stroke-width: 0.7; }
+  .palette .bend-line { stroke: rgba(0, 0, 0, 0.55); stroke-width: 0.6; stroke-dasharray: 2.4 1.6; fill: none; }
+  .palette .palette-label {
+    fill: currentColor;
+    font-size: 11.7px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  .canvas-wrap {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    background:
+      radial-gradient(circle at 50% 50%, #1b2030 0%, #0a0c12 75%);
+  }
+  canvas { display: block; width: 100%; height: 100%; }
+  .legend {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    display: flex;
+    gap: 10px;
+    font-size: 11px;
+    color: var(--text-dim);
+    background: rgba(10, 12, 18, 0.7);
+    padding: 5px 9px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    backdrop-filter: blur(6px);
+  }
+  .legend .dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 5px;
+    vertical-align: middle;
+  }
+  .legend .dot.seam { background: var(--seam); border: 1px solid #2a2a2a; }
+  .legend .dot.panel { background: #cfd5e3; }
+  .legend .dot.ring { background: var(--fiberglass); }
+  .legend .dot.mount { background: #8a9099; }
+  .legend .dot.tether { background: var(--tether); }
+  .legend .dot.anchor { background: var(--anchor); }
+  .flight-section {
+    padding: 8px 32px 32px;
+    border-top: 1px solid var(--border);
+  }
+  .flight-section h2 {
+    margin: 0 0 6px;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  .flight-intro {
+    margin: 0 0 20px;
+    color: var(--text-dim);
+    font-size: 14px;
+  }
+  .flight-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 900px) {
+    .flight-grid { grid-template-columns: 1fr; }
+    .flight-section { padding: 8px 16px 24px; }
+  }
+  @media (max-width: 700px) {
+    .flight-section { padding: 8px 16px 24px; }
+  }
+  .card-body {
+    padding: 14px 16px 16px;
+  }
+  .card-body ul {
+    margin: 0;
+    padding-left: 18px;
+    color: var(--text-dim);
+    font-size: 12.5px;
+    line-height: 1.55;
+  }
+  .card-body ul li + li { margin-top: 4px; }
+  footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+    background: rgba(11, 13, 18, 0.85);
+    border-top: 1px solid var(--border);
+    backdrop-filter: blur(10px);
+    padding: 12px 32px;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-dim);
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    padding: 7px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .toggle input { accent-color: var(--accent); margin: 0; }
+  .toggle:hover { color: var(--text); border-color: #313749; }
+  .toggle.active { color: var(--text); border-color: var(--accent-soft); background: #1d2230; }
+  .source {
+    font-size: 12px;
+    color: var(--text-mute);
+    margin-left: auto;
+  }
+  @media (max-width: 700px) {
+    header { padding: 20px 18px 14px; }
+    main { padding: 16px; }
+    footer { padding: 10px 16px; }
+    .source { display: none; }
+  }
+</style>
+</head>
+<body>
+  <header>
+    <h1>TPU Inflatable Envelope &mdash; Geometry Options</h1>
+    <p>Envelope topologies from &sect;2 and flight modes from &sect;4 of <a href="working-draft.md">working-draft.md</a>. Drag to rotate each view; scroll to zoom.</p>
+  </header>
+
+  <main>
+    <section class="card" data-view="d1">
+      <div class="card-head">
+        <div>
+          <h2>&sect;2.1 &middot; Flat circles + sidewall band</h2>
+          <div class="sub">Two circular faces joined by a rectangular band</div>
+        </div>
+      </div>
+      <div class="palette" id="palette-d1"></div>
+      <div class="canvas-wrap">
+        <canvas id="canvas-d1"></canvas>
+        <div class="legend">
+          <span><span class="dot seam"></span>weld seam</span>
+          <span><span class="dot panel"></span>panel edge</span>
+          <span><span class="dot ring"></span>fiberglass ring</span>
+          <span><span class="dot mount"></span>wire + tape</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <ul>
+          <li>"Pillow on a barrel" silhouette &mdash; visible cylindrical sidewall, not a true lens.</li>
+          <li>Three panels to cut (two circles + a rectangle) instead of two.</li>
+          <li>More total weld length than the bent-rim variant.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="card" data-view="d2">
+      <div class="card-head">
+        <div>
+          <h2>&sect;2.2 &middot; Bent rims, thin equatorial collar</h2>
+          <div class="sub">Two discs with a ~2&nbsp;cm bent rim, overlap-welded</div>
+        </div>
+      </div>
+      <div class="palette" id="palette-d2"></div>
+      <div class="canvas-wrap">
+        <canvas id="canvas-d2"></canvas>
+        <div class="legend">
+          <span><span class="dot panel"></span>rim pleats</span>
+          <span><span class="dot ring"></span>fiberglass ring</span>
+          <span><span class="dot mount"></span>wire + tape</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <ul>
+          <li>Near-lens silhouette &mdash; the bent rim collapses to a barely-visible equatorial collar.</li>
+          <li>Two panels only; no separate sidewall band to cut, jig, or align.</li>
+          <li>Pleating modest at small w (~12&nbsp;cm gather per edge for a 2&nbsp;cm lip on a 3&nbsp;m disc).</li>
+          <li>Peel-loaded equator accepted &mdash; structural margin not critical for festival display.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="card" data-view="d3">
+      <div class="card-head">
+        <div>
+          <h2>&sect;2.3 &middot; Gored (orange-peel)</h2>
+          <div class="sub">12 meridional gores welded edge-to-edge</div>
+        </div>
+      </div>
+      <div class="palette" id="palette-d3"></div>
+      <div class="canvas-wrap">
+        <canvas id="canvas-d3"></canvas>
+        <div class="legend">
+          <span><span class="dot seam"></span>gore seam</span>
+          <span><span class="dot panel"></span>gore panel</span>
+          <span><span class="dot ring"></span>fiberglass ring</span>
+          <span><span class="dot mount"></span>wire + tape</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <ul>
+          <li>True curved surface with no forced stretch &mdash; smoothest inflated shape.</li>
+          <li>8&ndash;24 gores; total weld length and leak paths scale with gore count.</li>
+          <li>1&ndash;2&nbsp;mm cut error per gore accumulates across 12+ panels.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <section class="flight-section">
+    <h2>&sect;4 &middot; Flight modes</h2>
+    <p class="flight-intro">Same &sect;2.2 envelope and fiberglass ring &mdash; different orientation and ground anchoring.</p>
+    <div class="flight-grid">
+      <article class="card" data-view="fm-a">
+        <div class="card-head">
+          <div>
+            <h2>&sect;4.1 &middot; Horizontal disc (Saucer)</h2>
+            <div class="sub">Ring horizontal; disc faces up and down</div>
+          </div>
+        </div>
+        <div class="canvas-wrap">
+          <canvas id="canvas-fm-a"></canvas>
+          <div class="legend">
+            <span><span class="dot ring"></span>fiberglass ring</span>
+            <span><span class="dot mount"></span>wire + tape</span>
+            <span><span class="dot tether"></span>ground tether</span>
+            <span><span class="dot anchor"></span>ground anchor</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <ul>
+            <li>4 ground tethers at ring cardinal points &mdash; inverted-pyramid footprint.</li>
+            <li>Restoring moments against tilt; audience views the glowing disc from below.</li>
+            <li>Best for low-to-moderate wind and overhead display contexts.</li>
+          </ul>
+        </div>
+      </article>
+      <article class="card" data-view="fm-b">
+        <div class="card-head">
+          <div>
+            <h2>&sect;4.2 &middot; Vertical disc (Microphone)</h2>
+            <div class="sub">Disc perpendicular to ground; 3-tether tripod</div>
+          </div>
+        </div>
+        <div class="canvas-wrap">
+          <canvas id="canvas-fm-b"></canvas>
+          <div class="legend">
+            <span><span class="dot ring"></span>fiberglass ring</span>
+            <span><span class="dot mount"></span>wire + tape</span>
+            <span><span class="dot tether"></span>ground tether</span>
+            <span><span class="dot anchor"></span>ground anchor</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <ul>
+            <li>3 tethers at ring mount points (same as envelope wire mounts), omitting the upper one &mdash; each pulls in a different direction.</li>
+            <li>Pendulum stability; center of buoyancy above tether attachments.</li>
+            <li>Best for moderate wind and side-on display beside the audience.</li>
+          </ul>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <footer>
+    <label class="toggle active" id="toggle-rotate">
+      <input type="checkbox" checked />
+      <span>Auto-rotate</span>
+    </label>
+    <label class="toggle active" id="toggle-seams">
+      <input type="checkbox" checked />
+      <span>Show seams</span>
+    </label>
+    <label class="toggle" id="toggle-wire">
+      <input type="checkbox" />
+      <span>Wireframe</span>
+    </label>
+    <label class="toggle active" id="toggle-ring">
+      <input type="checkbox" checked />
+      <span>Show support ring</span>
+    </label>
+    <label class="toggle active" id="toggle-tethers">
+      <input type="checkbox" checked />
+      <span>Show anchor ropes</span>
+    </label>
+    <span class="source">three.js &middot; r160</span>
+  </footer>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const R = 1.0;
+const T = 0.35;
+const RING_R = R * 1.15;
+const ROD_R = 0.028;
+const GROUND_Y = -0.35;
+const ASSEMBLY_LIFT = 0.9;
+const TETHER_SPREAD_A = 1.5;
+const TETHER_SPREAD_B = 1.3;
+const FLIGHT_CAM_SCALE = 1.8;
+const ROPE_LENGTH = ASSEMBLY_LIFT - GROUND_Y;
+const RING_MOUNT_ANGLES = [0, Math.PI / 2, Math.PI, (3 * Math.PI) / 2];
+const SEAM_COLOR = 0x0a0a0a;
+const FABRIC_COLOR = 0xffe2b8;
+
+const PALETTE = {
+  d1: {
+    topFace: '#ffc94d',
+    sidewall: '#d68fff',
+    botFace: '#5cbeff',
+  },
+  d2: {
+    topHalf: '#8de37e',
+    botHalf: '#ff7e57',
+  },
+  d3Gores: 12,
+};
+
+function goreColor(i, n) {
+  const hue = (i * 360) / n;
+  return `hsl(${hue}, 62%, 62%)`;
+}
+
+const views = [];
+
+function createScene(canvasId, opts = {}) {
+  const canvas = document.getElementById(canvasId);
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.05;
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+  const scene = new THREE.Scene();
+
+  const camera = new THREE.PerspectiveCamera(34, 1, 0.05, 50);
+  const cam = opts.camera ?? [2.67, 1.89, 2.67];
+  camera.position.set(cam[0], cam[1], cam[2]);
+
+  const controls = new OrbitControls(camera, canvas);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.08;
+  controls.enablePan = false;
+  controls.minDistance = opts.minDistance ?? 1.78;
+  controls.maxDistance = opts.maxDistance ?? 8.9;
+  controls.autoRotate = opts.autoRotate !== false;
+  controls.autoRotateSpeed = 0.9;
+  controls.target.set(0, 0, 0);
+
+  const hemi = new THREE.HemisphereLight(0xb6c4ff, 0x1a1410, 0.55);
+  scene.add(hemi);
+
+  const key = new THREE.DirectionalLight(0xfff1d6, 1.1);
+  key.position.set(3, 4, 2);
+  scene.add(key);
+
+  const fill = new THREE.DirectionalLight(0x9bb8ff, 0.45);
+  fill.position.set(-3, -1, -2);
+  scene.add(fill);
+
+  const inner = new THREE.PointLight(0xffc080, 0.8, 4.0, 1.4);
+  inner.position.set(0, 0, 0);
+  scene.add(inner);
+
+  const rim = new THREE.DirectionalLight(0x6ea3ff, 0.55);
+  rim.position.set(-2, 0.4, 3);
+  scene.add(rim);
+
+  const root = new THREE.Group();
+  scene.add(root);
+
+  const ro = new ResizeObserver(() => {
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
+    if (w === 0 || h === 0) return;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  });
+  ro.observe(canvas);
+
+  const view = { renderer, scene, camera, controls, root, seams: [], edges: [], rings: [], tethers: [] };
+  views.push(view);
+  return view;
+}
+
+function makeFabricMaterial(colorHex = FABRIC_COLOR, opacity = 1) {
+  const color = new THREE.Color(colorHex);
+  const transparent = opacity < 1;
+  return new THREE.MeshPhysicalMaterial({
+    color,
+    metalness: 0.0,
+    roughness: 0.55,
+    transmission: transparent ? 0.15 : 0.35,
+    thickness: 0.35,
+    ior: 1.35,
+    attenuationColor: color.clone(),
+    attenuationDistance: 1.8,
+    emissive: color.clone(),
+    emissiveIntensity: 0.06,
+    side: THREE.DoubleSide,
+    clearcoat: 0.18,
+    clearcoatRoughness: 0.7,
+    transparent,
+    opacity,
+    depthWrite: !transparent,
+  });
+}
+
+function paletteLabel(x, y, text) {
+  return `<text x="${x}" y="${y}" text-anchor="middle" class="palette-label">${text}</text>`;
+}
+
+function buildPalette1(container, colors) {
+  const r = 40;
+  const gap = 20;
+  const bandW = 108;
+  const bandH = 28;
+  const leftCx = r;
+  const bandX = 2 * r + gap;
+  const rightCx = bandX + bandW + gap + r;
+  const viewW = rightCx + r;
+  const bandY = 46 - bandH / 2;
+  const labelY = 108;
+  container.innerHTML = `
+    <svg viewBox="0 0 ${viewW} 120" preserveAspectRatio="xMidYMid meet" aria-label="Design 1 flat pieces">
+      <circle cx="${leftCx}" cy="46" r="${r}" class="piece-stroke" fill="${colors.topFace}"/>
+      <rect x="${bandX}" y="${bandY}" width="${bandW}" height="${bandH}" rx="2" class="piece-stroke" fill="${colors.sidewall}"/>
+      <circle cx="${rightCx}" cy="46" r="${r}" class="piece-stroke" fill="${colors.botFace}"/>
+      ${paletteLabel(leftCx, labelY, 'Top face')}
+      ${paletteLabel(bandX + bandW / 2, labelY, 'Sidewall band')}
+      ${paletteLabel(rightCx, labelY, 'Bottom face')}
+    </svg>
+  `;
+}
+
+function buildPalette2(container, colors) {
+  const r = 44;
+  const gap = 36;
+  const leftCx = r;
+  const rightCx = 2 * r + gap + r;
+  const viewW = rightCx + r;
+  const labelY = 108;
+  container.innerHTML = `
+    <svg viewBox="0 0 ${viewW} 120" preserveAspectRatio="xMidYMid meet" aria-label="Design 2 flat pieces">
+      <g>
+        <circle cx="${leftCx}" cy="46" r="${r}" class="piece-stroke" fill="${colors.topHalf}"/>
+        <circle cx="${leftCx}" cy="46" r="${r - 8}" class="bend-line"/>
+      </g>
+      <g>
+        <circle cx="${rightCx}" cy="46" r="${r}" class="piece-stroke" fill="${colors.botHalf}"/>
+        <circle cx="${rightCx}" cy="46" r="${r - 8}" class="bend-line"/>
+      </g>
+      ${paletteLabel(leftCx, labelY, 'Top disc + bent rim')}
+      ${paletteLabel(rightCx, labelY, 'Bottom disc + bent rim')}
+    </svg>
+  `;
+}
+
+function buildPalette3(container, goreCount) {
+  const goreW = 10;
+  const goreH = 88;
+  const gap = 8;
+  const total = goreCount * goreW + (goreCount - 1) * gap;
+  const labelY = goreH + 14;
+  const viewH = labelY + 6;
+  let pieces = '';
+  for (let i = 0; i < goreCount; i++) {
+    const x = i * (goreW + gap);
+    const cx = x + goreW / 2;
+    const path = `M ${cx},0 Q ${x + goreW},${goreH / 2} ${cx},${goreH} Q ${x},${goreH / 2} ${cx},0 Z`;
+    pieces += `<path d="${path}" class="piece-stroke" fill="${goreColor(i, goreCount)}"/>`;
+  }
+  container.innerHTML = `
+    <svg viewBox="0 -2 ${total} ${viewH}" preserveAspectRatio="xMidYMid meet" aria-label="Design 3 flat pieces">
+      ${pieces}
+      ${paletteLabel(total / 2, labelY, `Gore panel \u00d7${goreCount}`)}
+    </svg>
+  `;
+}
+
+function makeSeamMaterial(opts = {}) {
+  return new THREE.LineDashedMaterial({
+    color: SEAM_COLOR,
+    dashSize: opts.dashSize ?? 0.035,
+    gapSize: opts.gapSize ?? 0.025,
+    transparent: true,
+    opacity: opts.opacity ?? 0.95,
+    depthTest: true,
+    toneMapped: false,
+  });
+}
+
+function makeEdgeMaterial() {
+  return new THREE.LineBasicMaterial({
+    color: 0xcfd5e3,
+    transparent: true,
+    opacity: 0.4,
+  });
+}
+
+function dashedLineFromPoints(points, material) {
+  const g = new THREE.BufferGeometry().setFromPoints(points);
+  const line = new THREE.Line(g, material);
+  line.computeLineDistances();
+  return line;
+}
+
+function seamRing(radius, y, material, segments = 256) {
+  const pts = [];
+  for (let i = 0; i <= segments; i++) {
+    const a = (i / segments) * Math.PI * 2;
+    pts.push(new THREE.Vector3(Math.cos(a) * radius, y, Math.sin(a) * radius));
+  }
+  return dashedLineFromPoints(pts, material);
+}
+
+function bulgeCircleGeometry(radius, segments, yOffset, bulge) {
+  const g = new THREE.CircleGeometry(radius, segments);
+  const pos = g.attributes.position;
+  const sign = bulge >= 0 ? 1 : -1;
+  const absBulge = Math.abs(bulge);
+  for (let i = 0; i < pos.count; i++) {
+    const x = pos.getX(i);
+    const yLocal = pos.getY(i);
+    const r = Math.sqrt(x * x + yLocal * yLocal);
+    const t = Math.min(r / radius, 1);
+    const dy = (1 - t * t) * absBulge * sign;
+    pos.setXYZ(i, x, yOffset + dy, yLocal);
+  }
+  pos.needsUpdate = true;
+  g.computeVertexNormals();
+  return g;
+}
+
+class EquatorArcCurve extends THREE.Curve {
+  constructor(radius, startAngle, endAngle) {
+    super();
+    this.radius = radius;
+    this.startAngle = startAngle;
+    this.endAngle = endAngle;
+  }
+  getPoint(t) {
+    const a = this.startAngle + t * (this.endAngle - this.startAngle);
+    return new THREE.Vector3(Math.cos(a) * this.radius, 0, Math.sin(a) * this.radius);
+  }
+}
+
+function makeFiberglassMaterial() {
+  return new THREE.MeshStandardMaterial({
+    color: 0xb8c4a8,
+    roughness: 0.75,
+    metalness: 0.05,
+  });
+}
+
+function makeWireMaterial() {
+  return new THREE.LineBasicMaterial({ color: 0x8a9099 });
+}
+
+function makeTapeMaterial() {
+  return new THREE.MeshStandardMaterial({
+    color: 0xe5dcc8,
+    roughness: 0.92,
+    metalness: 0.0,
+  });
+}
+
+function buildSupportRing(parent, view, envelopeRadius) {
+  const ringGroup = new THREE.Group();
+  const fgMat = makeFiberglassMaterial();
+  const wireMat = makeWireMaterial();
+  const tapeMat = makeTapeMaterial();
+
+  const segmentCount = 4;
+  const jointGap = 0.04;
+  const arcSpan = Math.PI / 2 - jointGap;
+
+  for (let i = 0; i < segmentCount; i++) {
+    const start = i * Math.PI / 2 + jointGap / 2;
+    const end = start + arcSpan;
+    const curve = new EquatorArcCurve(RING_R, start, end);
+    const tube = new THREE.TubeGeometry(curve, 48, ROD_R, 8, false);
+    ringGroup.add(new THREE.Mesh(tube, fgMat));
+  }
+
+  for (const theta of RING_MOUNT_ANGLES) {
+    const ex = Math.cos(theta) * envelopeRadius;
+    const ez = Math.sin(theta) * envelopeRadius;
+    const rx = Math.cos(theta) * RING_R;
+    const rz = Math.sin(theta) * RING_R;
+    const perpX = -Math.sin(theta);
+    const perpZ = Math.cos(theta);
+
+    const wirePts = [
+      new THREE.Vector3(ex, 0, ez),
+      new THREE.Vector3(
+        (ex + rx) / 2 + perpX * 0.01,
+        -0.012,
+        (ez + rz) / 2 + perpZ * 0.01
+      ),
+      new THREE.Vector3(rx, 0, rz),
+    ];
+    ringGroup.add(new THREE.Line(
+      new THREE.BufferGeometry().setFromPoints(wirePts),
+      wireMat
+    ));
+
+    const knotMat = new THREE.MeshBasicMaterial({ color: 0x8a9099 });
+    const knot = new THREE.Mesh(
+      new THREE.TorusGeometry(0.007, 0.0018, 5, 10),
+      knotMat
+    );
+    knot.position.set(rx, 0, rz);
+    knot.rotation.y = -theta;
+    knot.rotation.x = Math.PI / 2;
+    ringGroup.add(knot);
+
+    const tape = new THREE.Mesh(
+      new THREE.BoxGeometry(0.032, 0.011, 0.018),
+      tapeMat
+    );
+    tape.position.set(rx, 0, rz);
+    tape.rotation.y = -theta;
+    ringGroup.add(tape);
+  }
+
+  parent.add(ringGroup);
+  view.rings.push(ringGroup);
+  return ringGroup;
+}
+
+function buildAssembly22(view, parent) {
+  const matTopHalf = makeFabricMaterial(PALETTE.d2.topHalf);
+  const matBotHalf = makeFabricMaterial(PALETTE.d2.botHalf, 0.42);
+  const pleatMat = new THREE.LineBasicMaterial({
+    color: SEAM_COLOR,
+    transparent: true,
+    opacity: 0.55,
+    toneMapped: false,
+  });
+  const edgeMat = makeEdgeMaterial();
+
+  const w = 0.05;
+  const bulge = 0.16;
+  const lipGap = 0.006;
+
+  const topGeom = bulgeCircleGeometry(R, 128, w, bulge);
+  const botGeom = bulgeCircleGeometry(R, 128, -w, -bulge);
+  const top = new THREE.Mesh(topGeom, matTopHalf);
+  const bot = new THREE.Mesh(botGeom, matBotHalf);
+  top.renderOrder = 0;
+  bot.renderOrder = 1;
+  parent.add(top, bot);
+
+  const outerLipGeom = new THREE.CylinderGeometry(R, R, 2 * w, 128, 1, true);
+  const outerLip = new THREE.Mesh(outerLipGeom, matBotHalf);
+  outerLip.position.y = 0;
+  outerLip.renderOrder = 1;
+
+  const innerLipGeom = new THREE.CylinderGeometry(R - lipGap, R - lipGap, 2 * w, 128, 1, true);
+  const innerLip = new THREE.Mesh(innerLipGeom, matTopHalf);
+  innerLip.position.y = 0;
+  innerLip.renderOrder = 0;
+
+  parent.add(outerLip, innerLip);
+
+  const pleatGroup = new THREE.Group();
+  const pleatCount = 40;
+  const tickRadius = R * 1.006;
+  for (let i = 0; i < pleatCount; i++) {
+    const a = (i / pleatCount) * Math.PI * 2;
+    const x = Math.cos(a) * tickRadius;
+    const z = Math.sin(a) * tickRadius;
+    pleatGroup.add(dashedLineFromPoints(
+      [new THREE.Vector3(x, w * 0.15, z), new THREE.Vector3(x, w * 1.0, z)],
+      pleatMat
+    ));
+    pleatGroup.add(dashedLineFromPoints(
+      [new THREE.Vector3(x, -w * 1.0, z), new THREE.Vector3(x, -w * 0.15, z)],
+      pleatMat
+    ));
+  }
+  parent.add(pleatGroup);
+  view.seams.push(pleatGroup);
+
+  const edgeTop = new THREE.LineSegments(new THREE.EdgesGeometry(topGeom), edgeMat);
+  const edgeBot = new THREE.LineSegments(new THREE.EdgesGeometry(botGeom), edgeMat);
+  const edgeOuter = new THREE.LineSegments(new THREE.EdgesGeometry(outerLipGeom), edgeMat);
+  edgeOuter.position.copy(outerLip.position);
+  const edgeInner = new THREE.LineSegments(new THREE.EdgesGeometry(innerLipGeom), edgeMat);
+  edgeInner.position.copy(innerLip.position);
+  for (const e of [edgeTop, edgeBot, edgeOuter, edgeInner]) {
+    e.visible = false;
+    parent.add(e);
+    view.edges.push(e);
+  }
+
+  buildSupportRing(parent, view, R);
+  return parent;
+}
+
+function makeRopeMaterial() {
+  return new THREE.LineBasicMaterial({ color: 0xc4a882 });
+}
+
+function ringMountPoint(theta) {
+  return new THREE.Vector3(Math.cos(theta) * RING_R, 0, Math.sin(theta) * RING_R);
+}
+
+function groundAnchorFromMount(view, mount, ringLocal, spread) {
+  mount.updateMatrixWorld(true);
+  const centerWorld = new THREE.Vector3();
+  mount.getWorldPosition(centerWorld);
+  const ringWorld = ringLocal.clone().applyMatrix4(mount.matrixWorld);
+  const dir = ringWorld.clone().sub(centerWorld);
+  dir.y = 0;
+  const ground = new THREE.Vector3(centerWorld.x, GROUND_Y, centerWorld.z);
+  if (dir.lengthSq() > 1e-6) {
+    ground.add(dir.normalize().multiplyScalar(RING_R * spread));
+  }
+  return { ring: ringLocal, ground };
+}
+
+function parallelGroundPairs(mount, ringLocals) {
+  mount.updateMatrixWorld(true);
+  const drop = new THREE.Vector3(0, -ROPE_LENGTH, 0);
+  return ringLocals.map((ring) => {
+    const ringWorld = ring.clone().applyMatrix4(mount.matrixWorld);
+    return {
+      ring,
+      ground: ringWorld.clone().add(drop),
+    };
+  });
+}
+
+function buildGroundTethers(view, mount, pairs, spread) {
+  const group = new THREE.Group();
+  const ropeMat = makeRopeMaterial();
+  const pegMat = new THREE.MeshStandardMaterial({ color: 0x6a7388, roughness: 0.9, metalness: 0.1 });
+
+  mount.updateMatrixWorld(true);
+  for (const { ring, ground } of pairs) {
+    const ringWorld = ring.clone().applyMatrix4(mount.matrixWorld);
+    group.add(new THREE.Line(
+      new THREE.BufferGeometry().setFromPoints([ringWorld, ground.clone()]),
+      ropeMat
+    ));
+    const peg = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.018, 0.035, 6), pegMat);
+    peg.position.copy(ground);
+    group.add(peg);
+  }
+
+  const groundDisc = new THREE.Mesh(
+    new THREE.CircleGeometry(RING_R * spread * 1.05, 48),
+    new THREE.MeshBasicMaterial({ color: 0x1a2030, transparent: true, opacity: 0.35 })
+  );
+  groundDisc.rotation.x = -Math.PI / 2;
+  groundDisc.position.y = GROUND_Y;
+  group.add(groundDisc);
+
+  view.root.add(group);
+  view.tethers.push(group);
+  return group;
+}
+
+function buildFlightModeA(view) {
+  const mount = new THREE.Group();
+  mount.position.y = ASSEMBLY_LIFT;
+  buildAssembly22(view, mount);
+  view.root.add(mount);
+
+  const pairs = parallelGroundPairs(
+    mount,
+    RING_MOUNT_ANGLES.map((theta) => ringMountPoint(theta)),
+  );
+  buildGroundTethers(view, mount, pairs, 1.0);
+}
+
+function buildFlightModeB(view) {
+  const mount = new THREE.Group();
+  mount.position.y = ASSEMBLY_LIFT;
+  buildAssembly22(view, mount);
+  mount.rotation.z = Math.PI / 2;
+  view.root.add(mount);
+
+  const upperMount = 0;
+  const pairs = RING_MOUNT_ANGLES
+    .filter((theta) => theta !== upperMount)
+    .map((theta) => groundAnchorFromMount(view, mount, ringMountPoint(theta), TETHER_SPREAD_B));
+  buildGroundTethers(view, mount, pairs, TETHER_SPREAD_B);
+}
+
+function buildDesign1(view) {
+  const matTop = makeFabricMaterial(PALETTE.d1.topFace);
+  const matBot = makeFabricMaterial(PALETTE.d1.botFace);
+  const matSide = makeFabricMaterial(PALETTE.d1.sidewall);
+  const seamMat = makeSeamMaterial();
+  const edgeMat = makeEdgeMaterial();
+
+  const halfT = T / 4;
+  const t = T / 2;
+  const bulge = 0.09;
+
+  const topGeom = bulgeCircleGeometry(R, 128, halfT, bulge);
+  const botGeom = bulgeCircleGeometry(R, 128, -halfT, -bulge);
+  const top = new THREE.Mesh(topGeom, matTop);
+  const bot = new THREE.Mesh(botGeom, matBot);
+  view.root.add(top, bot);
+
+  const sideGeom = new THREE.CylinderGeometry(R, R, t, 128, 1, true);
+  const side = new THREE.Mesh(sideGeom, matSide);
+  view.root.add(side);
+
+  const seamTop = seamRing(R * 1.004, halfT, seamMat);
+  const seamBot = seamRing(R * 1.004, -halfT, seamMat);
+  view.root.add(seamTop, seamBot);
+  view.seams.push(seamTop, seamBot);
+
+  const edgeTop = new THREE.LineSegments(new THREE.EdgesGeometry(topGeom), edgeMat);
+  const edgeBot = new THREE.LineSegments(new THREE.EdgesGeometry(botGeom), edgeMat);
+  const edgeSide = new THREE.LineSegments(new THREE.EdgesGeometry(sideGeom), edgeMat);
+  edgeTop.visible = edgeBot.visible = edgeSide.visible = false;
+  view.root.add(edgeTop, edgeBot, edgeSide);
+  view.edges.push(edgeTop, edgeBot, edgeSide);
+
+  buildSupportRing(view.root, view, R);
+  view.root.rotation.x = -Math.PI / 6;
+}
+
+function buildDesign2(view) {
+  buildAssembly22(view, view.root);
+  view.root.rotation.x = -Math.PI / 6;
+}
+
+function buildDesign3(view) {
+  const seamMat = makeSeamMaterial();
+  const edgeMat = makeEdgeMaterial();
+
+  const lensRadius = R;
+  const flatten = T / (2 * lensRadius);
+  const goreCount = PALETTE.d3Gores;
+
+  const lensGroup = new THREE.Group();
+  lensGroup.scale.set(1, flatten, 1);
+  for (let g = 0; g < goreCount; g++) {
+    const phiStart = (g / goreCount) * Math.PI * 2;
+    const phiLength = (1 / goreCount) * Math.PI * 2;
+    const segGeom = new THREE.SphereGeometry(lensRadius, 12, 48, phiStart, phiLength);
+    const segMat = makeFabricMaterial(goreColor(g, goreCount));
+    lensGroup.add(new THREE.Mesh(segGeom, segMat));
+  }
+  view.root.add(lensGroup);
+  const seamGroup = new THREE.Group();
+  const steps = 128;
+  for (let g = 0; g < goreCount; g++) {
+    const phi = (g / goreCount) * Math.PI * 2;
+    const pts = [];
+    for (let i = 0; i <= steps; i++) {
+      const theta = (i / steps) * Math.PI;
+      const x = lensRadius * Math.sin(theta) * Math.cos(phi);
+      const y = lensRadius * Math.cos(theta) * flatten;
+      const z = lensRadius * Math.sin(theta) * Math.sin(phi);
+      pts.push(new THREE.Vector3(x * 1.006, y * 1.04, z * 1.006));
+    }
+    seamGroup.add(dashedLineFromPoints(pts, seamMat));
+  }
+  view.root.add(seamGroup);
+  view.seams.push(seamGroup);
+
+  const wireGroup = new THREE.Group();
+  for (let g = 0; g < goreCount; g++) {
+    const phi = (g / goreCount) * Math.PI * 2;
+    const pts = [];
+    const wSteps = 48;
+    for (let i = 0; i <= wSteps; i++) {
+      const theta = (i / wSteps) * Math.PI;
+      const x = lensRadius * Math.sin(theta) * Math.cos(phi);
+      const y = lensRadius * Math.cos(theta) * flatten;
+      const z = lensRadius * Math.sin(theta) * Math.sin(phi);
+      pts.push(new THREE.Vector3(x * 1.012, y * 1.05, z * 1.012));
+    }
+    wireGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), edgeMat));
+  }
+  const equatorEdge = new THREE.Line(
+    new THREE.BufferGeometry().setFromPoints(
+      Array.from({ length: 129 }, (_, i) => {
+        const a = (i / 128) * Math.PI * 2;
+        return new THREE.Vector3(Math.cos(a) * lensRadius * 1.012, 0, Math.sin(a) * lensRadius * 1.012);
+      })
+    ),
+    edgeMat
+  );
+  wireGroup.add(equatorEdge);
+  wireGroup.visible = false;
+  view.root.add(wireGroup);
+  view.edges.push(wireGroup);
+
+  buildSupportRing(view.root, view, R);
+  view.root.rotation.x = -Math.PI / 6;
+}
+
+const v1 = createScene('canvas-d1');
+const v2 = createScene('canvas-d2');
+const v3 = createScene('canvas-d3');
+const flightCam = (x, y, z) => [x * FLIGHT_CAM_SCALE, y * FLIGHT_CAM_SCALE, z * FLIGHT_CAM_SCALE];
+const flightOrbit = { minDistance: 1.78 * FLIGHT_CAM_SCALE, maxDistance: 8.9 * FLIGHT_CAM_SCALE };
+const v4 = createScene('canvas-fm-a', {
+  autoRotate: false,
+  camera: flightCam(2.67, 1.89, 2.67),
+  ...flightOrbit,
+});
+const v5 = createScene('canvas-fm-b', {
+  autoRotate: false,
+  camera: flightCam(3.2, 1.4, 0.4),
+  ...flightOrbit,
+});
+
+buildDesign1(v1);
+buildDesign2(v2);
+buildDesign3(v3);
+buildFlightModeA(v4);
+buildFlightModeB(v5);
+
+buildPalette1(document.getElementById('palette-d1'), PALETTE.d1);
+buildPalette2(document.getElementById('palette-d2'), PALETTE.d2);
+buildPalette3(document.getElementById('palette-d3'), PALETTE.d3Gores);
+
+const setVisible = (arr, visible) => {
+  for (const v of views) {
+    for (const obj of v[arr]) obj.visible = visible;
+  }
+};
+
+const setRotate = (on) => {
+  for (const v of [v1, v2, v3]) v.controls.autoRotate = on;
+};
+
+function wireToggle(id, onChange) {
+  const el = document.getElementById(id);
+  const input = el.querySelector('input');
+  const apply = () => {
+    el.classList.toggle('active', input.checked);
+    onChange(input.checked);
+  };
+  input.addEventListener('change', apply);
+  apply();
+}
+
+wireToggle('toggle-rotate', (on) => setRotate(on));
+wireToggle('toggle-seams', (on) => setVisible('seams', on));
+wireToggle('toggle-wire', (on) => setVisible('edges', on));
+wireToggle('toggle-ring', (on) => setVisible('rings', on));
+wireToggle('toggle-tethers', (on) => setVisible('tethers', on));
+
+const clock = new THREE.Clock();
+function tick() {
+  const dt = clock.getDelta();
+  for (const v of views) {
+    v.controls.update();
+    v.renderer.render(v.scene, v.camera);
+  }
+  requestAnimationFrame(tick);
+}
+tick();
+</script>
+</body>
+</html>
