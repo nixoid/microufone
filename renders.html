@@ -19,6 +19,7 @@
     --fiberglass: #b8c4a8;
     --tether: #c4a882;
     --anchor: #6a7388;
+    --nav-h: 48px;
   }
   * { box-sizing: border-box; }
   html, body {
@@ -31,6 +32,7 @@
     min-height: 100vh;
   }
   body {
+    padding-top: var(--nav-h);
     background:
       radial-gradient(1200px 600px at 20% -10%, rgba(255, 185, 104, 0.07), transparent 60%),
       radial-gradient(900px 500px at 90% 110%, rgba(110, 231, 168, 0.05), transparent 60%),
@@ -58,6 +60,55 @@
     color: var(--accent);
     text-decoration: none;
     border-bottom: 1px dotted var(--accent-soft);
+  }
+  .site-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    height: var(--nav-h);
+    background: rgba(20, 24, 33, 0.92);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(10px);
+  }
+  .site-nav-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    height: 100%;
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .site-nav .brand {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    text-decoration: none;
+    letter-spacing: -0.01em;
+  }
+  .site-nav .brand:hover { color: var(--accent); }
+  .site-nav-links {
+    display: flex;
+    gap: 8px;
+  }
+  .site-nav-links a {
+    font-size: 13px;
+    color: var(--text-dim);
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: color 0.15s, background 0.15s;
+  }
+  .site-nav-links a:hover {
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.04);
+  }
+  .site-nav-links a.active {
+    color: var(--accent);
+    background: var(--accent-soft);
   }
   main {
     padding: 24px 32px 32px;
@@ -225,6 +276,7 @@
     margin-left: auto;
   }
   @media (max-width: 700px) {
+    .site-nav-inner { padding: 0 16px; }
     header { padding: 20px 18px 14px; }
     main { padding: 16px; }
     footer { padding: 10px 16px; }
@@ -233,9 +285,18 @@
 </style>
 </head>
 <body>
+  <nav class="site-nav" aria-label="Site">
+    <div class="site-nav-inner">
+      <a class="brand" href="renders.html">microufone</a>
+      <div class="site-nav-links">
+        <a href="renders.html" class="active">Renders</a>
+        <a href="specs.html">Specs</a>
+      </div>
+    </div>
+  </nav>
   <header>
     <h1>TPU Inflatable Envelope &mdash; Geometry Options</h1>
-    <p>Envelope topologies from &sect;2 and flight modes from &sect;4 of <a href="working-draft.md">working-draft.md</a>. Drag to rotate each view; scroll to zoom.</p>
+    <p>Envelope topologies from &sect;2 and flight modes from &sect;4 of <a href="specs.html">specs</a>. Drag to rotate each view; scroll to zoom.</p>
   </header>
 
   <main>
