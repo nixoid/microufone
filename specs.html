@@ -14,7 +14,7 @@
     --text-mute: #6a7388;
     --accent: #ffb968;
     --accent-soft: rgba(255, 185, 104, 0.18);
-    --nav-h: 72px;
+    --nav-h: 52px;
   }
   * { box-sizing: border-box; }
   html, body {
@@ -51,19 +51,10 @@
     height: 100%;
     padding: 0 32px;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 12px;
   }
-  .site-nav .brand {
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--text);
-    text-decoration: none;
-    letter-spacing: 0.02em;
-  }
-  .site-nav .brand:hover { color: var(--accent); }
   .site-nav-links {
     display: flex;
     gap: 12px;
@@ -199,7 +190,6 @@
 <body>
   <nav class="site-nav" aria-label="Site">
     <div class="site-nav-inner">
-      <a class="brand" href="renders.html">MicroUFOne</a>
       <div class="site-nav-links">
         <a href="renders.html">Renders</a>
         <a href="specs.html" class="active">Specs</a>
