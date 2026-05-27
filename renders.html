@@ -196,6 +196,8 @@
   }
   .legend .dot.seam { background: var(--seam); border: 1px solid #2a2a2a; }
   .legend .dot.panel { background: #cfd5e3; }
+  .legend .dot.shell { background: #ffd9a8; border: 1px solid #b08555; }
+  .legend .dot.bladder { background: #6fd6e6; border: 1px solid #2a8a99; opacity: 0.85; }
   .legend .dot.ring { background: var(--fiberglass); }
   .legend .dot.mount { background: #8a9099; }
   .legend .dot.tether { background: var(--tether); }
@@ -286,14 +288,16 @@
   <nav class="site-nav" aria-label="Site">
     <div class="site-nav-inner">
       <div class="site-nav-links">
-        <a href="renders.html" class="active">Renders</a>
+        <a href="renders-new.html">Renders (new)</a>
+        <a href="renders.html" class="active">Renders (original)</a>
         <a href="specs.html">Specs</a>
+        <a href="calculator.html">Calculator</a>
       </div>
     </div>
   </nav>
   <header>
-    <h1>TPU Inflatable Envelope &mdash; Geometry Options</h1>
-    <p>Envelope topologies from &sect;2 and flight modes from &sect;4 of <a href="specs.html">specs</a>. Drag to rotate each view; scroll to zoom.</p>
+    <h1>Bladder + Shell Envelope &mdash; Geometry Options</h1>
+    <p>Two-layer architecture: inner TPU film bladder (translucent cyan) inside an uncoated ripstop shell (warm fabric panels). Envelope topologies from &sect;2 and flight modes from &sect;4 of <a href="specs.html">specs</a>. Drag to rotate; scroll to zoom; toggle the bladder layer in the footer.</p>
   </header>
 
   <main>
@@ -308,17 +312,18 @@
       <div class="canvas-wrap">
         <canvas id="canvas-d1"></canvas>
         <div class="legend">
-          <span><span class="dot seam"></span>weld seam</span>
-          <span><span class="dot panel"></span>panel edge</span>
-          <span><span class="dot ring"></span>fiberglass ring</span>
+          <span><span class="dot bladder"></span>TPU bladder</span>
+          <span><span class="dot shell"></span>ripstop shell</span>
+          <span><span class="dot seam"></span>seam</span>
+          <span><span class="dot ring"></span>support ring</span>
           <span><span class="dot mount"></span>wire + tape</span>
         </div>
       </div>
       <div class="card-body">
         <ul>
+          <li>Bladder welded as flat top + bottom circles + rectangular sidewall band; shell sewn from the same panel layout, ~2&ndash;3% larger linear.</li>
           <li>"Pillow on a barrel" silhouette &mdash; visible cylindrical sidewall, not a true lens.</li>
-          <li>Three panels to cut (two circles + a rectangle) instead of two.</li>
-          <li>More total weld length than the bent-rim variant.</li>
+          <li>Three panels to cut per layer instead of two; weld length on bladder &gt; bent-rim variant.</li>
         </ul>
       </div>
     </section>
@@ -334,17 +339,19 @@
       <div class="canvas-wrap">
         <canvas id="canvas-d2"></canvas>
         <div class="legend">
+          <span><span class="dot bladder"></span>TPU bladder</span>
+          <span><span class="dot shell"></span>ripstop shell</span>
           <span><span class="dot panel"></span>rim pleats</span>
-          <span><span class="dot ring"></span>fiberglass ring</span>
+          <span><span class="dot ring"></span>support ring</span>
           <span><span class="dot mount"></span>wire + tape</span>
         </div>
       </div>
       <div class="card-body">
         <ul>
+          <li>Bladder built as two bent-rim half-shells, equator-welded; shell mirrors the geometry sewn slightly oversized.</li>
           <li>Near-lens silhouette &mdash; the bent rim collapses to a barely-visible equatorial collar.</li>
-          <li>Two panels only; no separate sidewall band to cut, jig, or align.</li>
-          <li>Pleating modest at small w (~12&nbsp;cm gather per edge for a 2&nbsp;cm lip on a 3&nbsp;m disc).</li>
-          <li>Peel-loaded equator accepted &mdash; structural margin not critical for festival display.</li>
+          <li>Two panels per layer; no separate sidewall band to cut, jig, or align.</li>
+          <li>Pleating on bladder modest at small w; peel-loaded equator weld accepted (shell carries no pressure, so this is bladder-only).</li>
         </ul>
       </div>
     </section>
@@ -360,16 +367,18 @@
       <div class="canvas-wrap">
         <canvas id="canvas-d3"></canvas>
         <div class="legend">
+          <span><span class="dot bladder"></span>TPU bladder</span>
+          <span><span class="dot shell"></span>ripstop shell</span>
           <span><span class="dot seam"></span>gore seam</span>
-          <span><span class="dot panel"></span>gore panel</span>
-          <span><span class="dot ring"></span>fiberglass ring</span>
+          <span><span class="dot ring"></span>support ring</span>
           <span><span class="dot mount"></span>wire + tape</span>
         </div>
       </div>
       <div class="card-body">
         <ul>
+          <li>Bladder gored from TPU film; shell gored from ripstop &mdash; both layers carry the same panel decomposition.</li>
           <li>True curved surface with no forced stretch &mdash; smoothest inflated shape.</li>
-          <li>8&ndash;24 gores; total weld length and leak paths scale with gore count.</li>
+          <li>8&ndash;24 gores per layer; total seam length and bladder leak paths scale with gore count.</li>
           <li>1&ndash;2&nbsp;mm cut error per gore accumulates across 12+ panels.</li>
         </ul>
       </div>
@@ -390,7 +399,9 @@
         <div class="canvas-wrap">
           <canvas id="canvas-fm-a"></canvas>
           <div class="legend">
-            <span><span class="dot ring"></span>fiberglass ring</span>
+            <span><span class="dot bladder"></span>TPU bladder</span>
+            <span><span class="dot shell"></span>ripstop shell</span>
+            <span><span class="dot ring"></span>support ring</span>
             <span><span class="dot mount"></span>wire + tape</span>
             <span><span class="dot tether"></span>ground tether</span>
             <span><span class="dot anchor"></span>ground anchor</span>
@@ -398,7 +409,7 @@
         </div>
         <div class="card-body">
           <ul>
-            <li>4 ground tethers at ring cardinal points &mdash; inverted-pyramid footprint.</li>
+            <li>4 ground tethers attach to the <strong>shell</strong> at ring cardinal points &mdash; inverted-pyramid footprint; bladder isolated from all tether load.</li>
             <li>Restoring moments against tilt; audience views the glowing disc from below.</li>
             <li>Best for low-to-moderate wind and overhead display contexts.</li>
           </ul>
@@ -414,7 +425,9 @@
         <div class="canvas-wrap">
           <canvas id="canvas-fm-b"></canvas>
           <div class="legend">
-            <span><span class="dot ring"></span>fiberglass ring</span>
+            <span><span class="dot bladder"></span>TPU bladder</span>
+            <span><span class="dot shell"></span>ripstop shell</span>
+            <span><span class="dot ring"></span>support ring</span>
             <span><span class="dot mount"></span>wire + tape</span>
             <span><span class="dot tether"></span>ground tether</span>
             <span><span class="dot anchor"></span>ground anchor</span>
@@ -422,7 +435,7 @@
         </div>
         <div class="card-body">
           <ul>
-            <li>3 tethers at ring mount points (same as envelope wire mounts), omitting the upper one &mdash; each pulls in a different direction.</li>
+            <li>3 tethers at shell mount points (same as ring shock-mount patches), omitting the upper one &mdash; each pulls in a different direction.</li>
             <li>Pendulum stability; center of buoyancy above tether attachments.</li>
             <li>Best for moderate wind and side-on display beside the audience.</li>
           </ul>
@@ -443,6 +456,10 @@
     <label class="toggle" id="toggle-wire">
       <input type="checkbox" />
       <span>Wireframe</span>
+    </label>
+    <label class="toggle active" id="toggle-bladder">
+      <input type="checkbox" checked />
+      <span>Show bladder</span>
     </label>
     <label class="toggle active" id="toggle-ring">
       <input type="checkbox" checked />
@@ -481,6 +498,8 @@ const ROPE_LENGTH = ASSEMBLY_LIFT - GROUND_Y;
 const RING_MOUNT_ANGLES = [0, Math.PI / 2, Math.PI, (3 * Math.PI) / 2];
 const SEAM_COLOR = 0x0a0a0a;
 const FABRIC_COLOR = 0xffe2b8;
+const BLADDER_COLOR = 0x9be8f5;
+const BLADDER_SCALE = 0.94;
 
 const PALETTE = {
   d1: {
@@ -558,7 +577,7 @@ function createScene(canvasId, opts = {}) {
   });
   ro.observe(canvas);
 
-  const view = { renderer, scene, camera, controls, root, seams: [], edges: [], rings: [], tethers: [] };
+  const view = { renderer, scene, camera, controls, root, seams: [], edges: [], rings: [], tethers: [], bladders: [] };
   views.push(view);
   return view;
 }
@@ -583,6 +602,27 @@ function makeFabricMaterial(colorHex = FABRIC_COLOR, opacity = 1) {
     transparent,
     opacity,
     depthWrite: !transparent,
+  });
+}
+
+function makeBladderMaterial() {
+  const color = new THREE.Color(BLADDER_COLOR);
+  return new THREE.MeshPhysicalMaterial({
+    color,
+    metalness: 0.0,
+    roughness: 0.18,
+    transmission: 0.82,
+    thickness: 0.3,
+    ior: 1.36,
+    attenuationColor: color.clone(),
+    attenuationDistance: 0.9,
+    emissive: color.clone(),
+    emissiveIntensity: 0.08,
+    side: THREE.DoubleSide,
+    clearcoat: 0.35,
+    clearcoatRoughness: 0.5,
+    transparent: false,
+    depthWrite: true,
   });
 }
 
@@ -875,6 +915,20 @@ function buildAssembly22(view, parent) {
     view.edges.push(e);
   }
 
+  const bladderGroup = new THREE.Group();
+  bladderGroup.scale.setScalar(BLADDER_SCALE);
+  const bladderMat = makeBladderMaterial();
+  const bTopGeom = bulgeCircleGeometry(R, 96, w, bulge * 1.05);
+  const bBotGeom = bulgeCircleGeometry(R, 96, -w, -bulge * 1.05);
+  const bLipGeom = new THREE.CylinderGeometry(R, R, 2 * w, 96, 1, true);
+  bladderGroup.add(
+    new THREE.Mesh(bTopGeom, bladderMat),
+    new THREE.Mesh(bBotGeom, bladderMat),
+    new THREE.Mesh(bLipGeom, bladderMat),
+  );
+  parent.add(bladderGroup);
+  view.bladders.push(bladderGroup);
+
   buildSupportRing(parent, view, R);
   return parent;
 }
@@ -1003,6 +1057,20 @@ function buildDesign1(view) {
   view.root.add(edgeTop, edgeBot, edgeSide);
   view.edges.push(edgeTop, edgeBot, edgeSide);
 
+  const bladderGroup = new THREE.Group();
+  bladderGroup.scale.setScalar(BLADDER_SCALE);
+  const bladderMat = makeBladderMaterial();
+  const bTopGeom = bulgeCircleGeometry(R, 96, halfT, bulge * 1.1);
+  const bBotGeom = bulgeCircleGeometry(R, 96, -halfT, -bulge * 1.1);
+  const bSideGeom = new THREE.CylinderGeometry(R, R, t, 96, 1, true);
+  bladderGroup.add(
+    new THREE.Mesh(bTopGeom, bladderMat),
+    new THREE.Mesh(bBotGeom, bladderMat),
+    new THREE.Mesh(bSideGeom, bladderMat),
+  );
+  view.root.add(bladderGroup);
+  view.bladders.push(bladderGroup);
+
   buildSupportRing(view.root, view, R);
   view.root.rotation.x = -Math.PI / 6;
 }
@@ -1075,6 +1143,14 @@ function buildDesign3(view) {
   view.root.add(wireGroup);
   view.edges.push(wireGroup);
 
+  const bladderGroup = new THREE.Group();
+  bladderGroup.scale.set(BLADDER_SCALE, flatten * BLADDER_SCALE, BLADDER_SCALE);
+  const bladderMat = makeBladderMaterial();
+  const bladderGeom = new THREE.SphereGeometry(lensRadius, 48, 32);
+  bladderGroup.add(new THREE.Mesh(bladderGeom, bladderMat));
+  view.root.add(bladderGroup);
+  view.bladders.push(bladderGroup);
+
   buildSupportRing(view.root, view, R);
   view.root.rotation.x = -Math.PI / 6;
 }
@@ -1129,6 +1205,7 @@ function wireToggle(id, onChange) {
 wireToggle('toggle-rotate', (on) => setRotate(on));
 wireToggle('toggle-seams', (on) => setVisible('seams', on));
 wireToggle('toggle-wire', (on) => setVisible('edges', on));
+wireToggle('toggle-bladder', (on) => setVisible('bladders', on));
 wireToggle('toggle-ring', (on) => setVisible('rings', on));
 wireToggle('toggle-tethers', (on) => setVisible('tethers', on));
 

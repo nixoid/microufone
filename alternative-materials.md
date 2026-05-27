@@ -65,23 +65,55 @@ PVC is a vinyl film, usually laminated onto polyester or nylon. It's the classic
 | **Seattle Fabrics** | [seattlefabrics.com](https://www.seattlefabrics.com) | $12–30/yd (PVC-coated nylon/polyester, various weights) | Ships from Seattle, WA. ~3–5 days ground. Phone order + will-call. | Many |
 | **Plastic Fabric Solutions** | [plasticfabrics.com](https://plasticfabrics.com) | ~$4.25/yd wholesale (16oz PVC-coated polyester, 49yd rolls = $210) | Ships from US. Wholesale quantities. ~5–7 days. | Some |
 
+### 4. Dual-layer: TPU film bladder + uncoated ripstop shell — best for long-term flex resilience
+
+Instead of using one coated fabric for both jobs, split them: a **pure TPU film** inner bladder holds the gas, and a separate **uncoated ripstop nylon** outer shell carries shape, mounting hardware, UV/abrasion protection, and visual styling. The two layers are mechanically independent — no adhesion, no welding between them — so the failure mode that kills coated fabrics over time is eliminated.
+
+- **Why this exists:** Practitioner feedback (Armand Matossian, who has built inflatables professionally) reports that **TPU coatings delaminate from ripstop** under repeated inflation/deflation and wind-flex cycling. Once delamination starts, the fabric balloons locally where the coating has lifted, leaks, and concentrates further stress. He has had much better long-term results splitting the layers and using straight TPU film as a separate gas-holding bladder. American Polyfilm's [TPU film for inflatables and advertising](https://www.americanpolyfilm.com/inflatables-and-advertising-tpu-film) line is one of the canonical sources for that bladder film.
+- **How to build with it:**
+  - **Bladder:** cut TPU film panels, overlap edges ~15 mm, iron-weld through parchment (~200°C) — same procedure as TPU-coated fabric, just with a film both sides instead of a fabric/film composite.
+  - **Shell:** cut uncoated ripstop panels, sew them with a domestic machine; no seam tape, no welding, no airtightness needed because the shell never sees pressure.
+  - **Assembly:** install Boston valve on the bladder; cut a Velcro-closed access flap on the shell over the valve; drop the deflated bladder inside the shell; inflate through the access flap.
+- **Flexibility:** identical to single-wall TPU on the bladder; full ripstop range on the shell (no temperature-driven coating brittleness because there's no coating).
+- **Durability:** addresses the dominant long-term failure mode of coated fabric (delamination). Bladder and shell can each be replaced or upgraded independently.
+- **Repairability:** patch bladder with iron-welded TPU film; patch shell by sewing on more ripstop or with iron-on repair tape. Either layer can be swapped without rebuilding the other.
+- **Cost:** roughly the sum of two layers (~$10–25/yd film + $5–15/yd uncoated ripstop). Comparable per-yard to mid-range single-wall TPU, but you buy two layers' worth of material.
+- **Catch:** more parts and assembly steps than single-wall. Two cuts per panel. Once the shell is on, the bladder is harder to inspect — leaks must be diagnosed by deflation behavior or by removing the bladder. Adds a shell access port for valve service.
+
+#### Vendors — TPU film (bladder)
+
+| Vendor | Website | Price Range | Shipping to Berkeley | Verified Positive Reviews |
+|---|---|---|---|---|
+| **American Polyfilm** | [americanpolyfilm.com](https://www.americanpolyfilm.com/inflatables-and-advertising-tpu-film) | Quote-based; standard inflatables/advertising TPU film lines | Ships from Branford, CT (US). | Practitioner-recommended for inflatable bladder applications |
+| **DIY Packraft (TPU film)** | [diypackraft.com](https://www.diypackraft.com) | ~$10–20/yd for plain TPU film widths | Ships from Europe (~7–14 days). | Some |
+| **Extremtextil (TPU film options)** | [extremtextil.de](https://www.extremtextil.de/en/) | €8–18/m (~$9–20/yd) depending on thickness | Ships from Germany (~10–14 days). | Many |
+
+#### Vendors — uncoated ripstop nylon (shell)
+
+| Vendor | Website | Price Range | Shipping to Berkeley | Verified Positive Reviews |
+|---|---|---|---|---|
+| **Ripstop by the Roll** | [ripstopbytheroll.com](https://ripstopbytheroll.com) | $5–14/yd for 30D–70D ripstop nylon, wide color range | Ships from North Carolina (US). ~3–5 days. | Many |
+| **Rockywoods Fabrics** | [rockywoods.com](https://rockywoods.com) | $8–18/yd for 40D–210D ripstop nylon (incl. FR-treated) | Ships from Colorado. ~3–5 days. | Many |
+| **Emmakites** | [emmakites.com](https://www.emmakites.com) | $5–8/yd small qty; $229/50yd roll (40D ripstop, 19 colors) | Ships from US warehouse. ~5–7 days. | Some |
+| **Discount Fabrics SF/Berkeley** | [discountfabrics-sf.com](https://www.discountfabrics-sf.com) | Walk-in pricing varies | **In-store pickup** — Berkeley & SF | Many |
+
 ---
 
 ## Comparison Table
 
-| Property | TPU-coated Nylon | PU-coated Nylon | PVC |
-|---|---|---|---|
-| Airtight seams with iron alone | **Yes** | No — sew + seam tape | No — glue (HH-66) |
-| Weight | Lightest | Light | Heavy |
-| Wind resistance | Excellent | Excellent | Good |
-| UV resistance | High | Moderate–High | Low (needs coating) |
-| Cold flexibility | -40°C | ~-20°C | Brittle below 0°C |
-| Flex cycle lifespan | >1M cycles | ~100K cycles | Moderate |
-| Ease of construction | Iron only | Sew + seal | Glue or weld |
-| Small-qty US availability | Limited | Widely available | Widely available |
-| Cost per yard | $6–30 | $5–20 | $4–12 |
-| Glow translucency | Some options | Some options | Opaque |
-| Best for | Final build, clean airtight seams | Prototyping, widely available | Cheap early prototypes |
+| Property | TPU-coated Nylon | PU-coated Nylon | PVC | Dual-layer (TPU film + ripstop) |
+|---|---|---|---|---|
+| Airtight seams | Iron-welded coated fabric | Sew + seam tape | Glue (HH-66) | Iron-welded film (bladder only); shell sewn |
+| Weight | Lightest | Light | Heavy | Light (sum of thin film + uncoated ripstop) |
+| Wind resistance | Excellent | Excellent | Good | Excellent (loads on shell, not on gas envelope) |
+| UV resistance | High | Moderate–High | Low (needs coating) | High (shell layer takes the UV hit) |
+| Cold flexibility | -40°C | ~-20°C | Brittle below 0°C | -40°C (bladder); fabric range (shell) |
+| Flex cycle lifespan | >1M cycles, but coating may delaminate | ~100K cycles | Moderate | **Best** — no coating-to-fabric bond to fail |
+| Ease of construction | Iron only | Sew + seal | Glue or weld | Iron film + sew shell + assemble (most steps) |
+| Small-qty US availability | Limited | Widely available | Widely available | Bladder limited; shell widely available |
+| Cost per yard | $6–30 | $5–20 | $4–12 | ~$15–35 (two layers' worth) |
+| Glow translucency | Some options | Some options | Opaque | Bladder very translucent; shell tunable |
+| Best for | Single-wall final build | Prototyping, widely available | Cheap early prototypes | Long-term outdoor/festival use, swappable layers |
 
 ---
 
@@ -89,7 +121,8 @@ PVC is a vinyl film, usually laminated onto polyester or nylon. It's the classic
 
 For a 2–3m tethered balloon in moderate-to-strong wind with glow hardware hanging off it:
 
-- **TPU-coated nylon ripstop** is the ideal final material. Lightest, strongest seams, genuinely airtight from the iron alone. The weight savings directly translate to more payload budget for LED strips / EL wire and less tether stress.
+- **Dual-layer (TPU film bladder + uncoated ripstop shell)** is the recommended final architecture, and is the selection captured in [`specs.md`](specs.md). It avoids the TPU-from-ripstop delamination failure mode that practitioners report on long-term outdoor builds, mechanically isolates the gas envelope from all tether/ring/light loads, and lets either layer be replaced or upgraded without rebuilding the other. Trades simplicity and a bit of weight for resilience.
+- **TPU-coated nylon ripstop** (single-wall) is the simplest viable final material if you accept a shorter flex-cycle lifetime and want one fabric to do everything. Lightest overall and easiest to weld. Good for a one-event build or where coated-fabric delamination is unlikely to be reached.
 - **PU-coated nylon ripstop** is a great prototyping material — cheap, widely available, and good enough to test your panel geometry and inflation behavior. Just accept that seam-sealing is fiddly and you may get slow leaks.
 - **PVC** is fine for a first "does this shape even work?" throwaway prototype where you don't care about weight or longevity.
 
@@ -121,10 +154,13 @@ For a 2–3m tethered balloon in moderate-to-strong wind with glow hardware hang
 
 ## Suggested Approach for Iterative Prototyping
 
-1. **Prototype round 1 (PU, sew + seal)** — Buy 10–20 yards of **40D PU-coated ripstop** from **Emmakites** (~$50–80). Sew panels, seal seams with iron-on PU seam tape ($10–15 on Amazon for 100m). Goal: test your panel geometry and inflation shape. Accept some slow leaks.
-2. **Prototype round 2 (TPU, iron-welded)** — Once your pattern works, rebuild in **TPU-coated nylon** from **OWF Inc** (~$6.59/yd). Iron-weld the seams for true airtightness. Test wind and payload performance.
-3. **Final build** — If 40D TPU is too light for wind loads, step up to heavier TPU from **Extremtextil** or **DIY Packraft**. Or consider bulk ordering from **Alibaba** if you need multiple copies.
-4. **Glow integration** — Test LED strip / EL wire attachment methods on TPU scraps. TPU patches can be iron-welded on as mounting points.
+1. **Prototype round 1 (PU, sew + seal)** — Buy 10–20 yards of **40D PU-coated ripstop** from **Emmakites** (~$50–80). Sew panels, seal seams with iron-on PU seam tape ($10–15 on Amazon for 100m). Goal: test your panel geometry and inflation shape as a single-wall throwaway. Accept some slow leaks.
+2. **Prototype round 2 (dual-layer, layers tested separately)** — Once your pattern works, build the bladder and shell independently:
+   - Bladder: **TPU film** from **American Polyfilm** (or DIY Packraft / Extremtextil), iron-welded, leak-tested standalone with air for ≥24 h.
+   - Shell: **uncoated 40D ripstop** from **Ripstop by the Roll** or **Emmakites**, sewn, with attachment patches and a Velcro access port over the valve location.
+   - Integrated assembly: drop bladder into shell, inflate, verify retention and that no shell load ever reaches the bladder.
+3. **Final build** — Scale to full size. If the bladder permeates too fast, step up TPU film thickness (e.g. 4 mil → 6 mil). If shell wind-deforms, step up to heavier ripstop or add reinforcement patches. Bulk material via **Alibaba** if building multiple copies.
+4. **Glow integration** — Test LED strip / EL wire attachment on the **shell** only — sewn patches, no bladder modifications ever.
 5. **Local consult** — Reach out to **INFLATABILL** for construction advice; they're Bay Area–based and specialize in exactly this kind of festival inflatable art.
 
 ## Seam Sealing Supplies (for PU-coated fabric only)

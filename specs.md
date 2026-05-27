@@ -1,39 +1,74 @@
 # TPU Inflatable Tethered Balloon — Specification
 
-## 1. Material: TPU-Coated Nylon Ripstop
+## 1. Material: TPU Film Bladder + Ripstop Nylon Shell
 
-**Selected material:** TPU-coated ripstop nylon.
+**Selected architecture:** Two-layer envelope. An inner **TPU film bladder** holds helium; an outer **uncoated ripstop nylon shell** carries shape, mounts hardware, and provides UV/abrasion protection. The two layers are mechanically independent — the bladder is retained inside the shell purely by its own inflation, with no bonded interface between them.
 
 **Rationale:** Suitable for a 2–3 m outdoor tethered lenticular disc operating in moderate-to-strong wind while carrying glow hardware.
 
+### 1.1 Inner bladder — TPU film
+
+Pure thermoplastic polyurethane film, no fabric backing. The bladder is the only airtight component.
+
 **Properties:**
 
-- Extremely lightweight (critical for flight stability and tether stress)
+- Extremely lightweight
 - Heat-weldable airtight with a household iron — no sewing or glue required for seams
-- Excellent UV, abrasion, and puncture resistance
 - Flexible to -40°C
 - > 500% elongation; rated for over 1 million flex cycles
-- Field-repairable with TPU fabric patches and iron welding
-- Some weights are semi-translucent, suitable for internal glow
+- Field-repairable with TPU film patches and iron welding
+- Semi-translucent, suitable for internal glow
 
-**Seam welding procedure:**
+**Suggested thickness:** 4–6 mil (~0.10–0.15 mm) for a 2–3 m envelope at low gauge pressure. Thicker reduces helium permeation and puncture risk; thinner saves weight.
 
-1. Overlap edges ~15–25 mm (TPU side to TPU side).
+**Seam welding procedure** (film-to-film):
+
+1. Overlap edges ~15–25 mm.
 2. Cover with parchment paper or Teflon sheet.
 3. Press with a flat iron at ~200°C (400°F) for 10–20 seconds per section.
 4. Roll firmly with a silicone roller while the seam cools.
-5. Verify strength — a good weld should tear the fabric before the seam fails.
+5. Verify strength — a good weld should tear the film before the seam fails.
+
+### 1.2 Outer shell — uncoated ripstop nylon
+
+Standard outdoor-grade ripstop nylon, no coating required. The shell is **not airtight** — it is a structural and visual garment over the bladder.
+
+**Properties:**
+
+- Excellent UV, abrasion, and puncture resistance
+- Tear-resistant ripstop weave (small tears don't propagate)
+- Flexible across full temperature range
+- Sewn construction; seams need no sealing because the shell carries no pressure
+- Carries all mechanical loads: ring shock-mounts, tether reinforcements, LED/glow hardware mounts
+- Easily replaced or restyled independently of the bladder
 
 **Fabric weights:**
 
 - **40D–70D ripstop** — top and bottom faces
 - **190–420D** — sidewall band and reinforcement patches
 
+**Construction:** sewn panels with a standard 5–10 mm seam allowance. No seam tape, no welding.
+
+### 1.3 Why dual-layer
+
+Single-wall TPU-coated ripstop is the conventional DIY-inflatable choice and was the original selection for this project. It was rejected after practitioner feedback flagged a recurring failure mode: the TPU coating **delaminates** from the ripstop weave under repeated inflation/deflation and wind-flex cycling. Once delamination starts, the fabric balloons locally where the coating has lifted, which both leaks and concentrates further stress.
+
+Separating the airtight layer from the structural layer eliminates the bond that fails:
+
+- The bladder is solid TPU film all the way through — no coating-to-fabric interface to delaminate.
+- The shell never sees pressure load and never needs to be airtight, so it has no coating at all.
+- All external loads (ring shock-mounts, tethers, lights) attach to the shell and are mechanically isolated from the gas envelope.
+- The bladder and shell can be replaced or upgraded independently.
+
+Reference for the failure mode and the bladder-film approach: [American Polyfilm — TPU film for inflatables and advertising](https://www.americanpolyfilm.com/inflatables-and-advertising-tpu-film).
+
 ---
 
 ## 2. Envelope Geometry Options
 
 Three envelope topologies were evaluated. Each produces a roughly disc/lens silhouette but distributes seams, stress, and material differently.
+
+> The geometries below describe the **inner bladder** shape — the part that is welded airtight from TPU film. The **outer shell** is cut to a slightly oversized matching profile (typically ~2–3% larger linear dimensions, ~6–9% larger volume) so the bladder inflates to fill it without putting the shell skin under tension. The shell carries no pressure load; its panel layout follows whichever geometry the bladder uses, but its seams are sewn rather than welded.
 
 ### 2.1 Two flat circles + rectangular sidewall band 
 
@@ -126,11 +161,13 @@ A rigid hoop concentric with the envelope and lying in its equatorial plane. It 
 
 ### 3.5 Attachment to Envelope
 
-The envelope is suspended within the ring at 4 cardinal points using elastic tensioners — analogous to a microphone shock-mount.
+All attachments target the **outer shell only**. The inner TPU bladder is mechanically isolated from the ring, the tethers, and the lights — it sees no concentrated point loads and no skin penetrations beyond its single inflation valve. The bladder is held inside the shell by inflation alone (positive volume fit), not by any glue, weld, or tether between layers.
+
+The shell is suspended within the ring at 4 cardinal points using elastic tensioners — analogous to a microphone shock-mount.
 
 **Per attachment point:**
 
-- TPU webbing loop welded to the envelope's sidewall band, reinforced with a 10–15 cm TPU patch.
+- Sewn nylon webbing loop on the shell's sidewall band, backed with a 10–15 cm sewn-on ripstop reinforcement patch (double layer + bar-tack stitching).
 - Stainless-steel split ring or small carabiner clipped to the loop.
 - Tension element between carabiner and ring, one of:
   - Coiled stainless steel extension spring (~5 cm, 3–5 kg working load)
@@ -143,11 +180,11 @@ The envelope is suspended within the ring at 4 cardinal points using elastic ten
 - Accommodates envelope volume changes (helium expands/contracts ~0.4% per °C) without skin stress.
 - Damps wind-induced oscillation between envelope and ring.
 - Distributes asymmetric loads across all attachment points (a rigid attachment would concentrate stress).
-- Decouples ring dimensional stability from envelope skin tension.
+- Decouples ring dimensional stability from shell tension, which is in turn decoupled from bladder pressure.
 
-**Number of attachment points:** 4 cardinal points (90° apart) is the minimum for symmetric suspension and matches the 4-tether layout of Mode A. More points (6 or 8) reduce per-point load and improve centering, at the cost of more hardware and more envelope penetrations.
+**Number of attachment points:** 4 cardinal points (90° apart) is the minimum for symmetric suspension and matches the 4-tether layout of Mode A. More points (6 or 8) reduce per-point load and improve centering, at the cost of more shell hardware. Note that adding shell attachment points is cheap (sewn patches only) — no bladder penetrations are involved.
 
-**Reinforcement:** All 4 attachment points are reinforced identically. The same points serve as tether anchors in Mode A and as suspension points in Mode B; load on each point varies with flight mode.
+**Reinforcement:** All 4 shell attachment points are reinforced identically. The same points serve as tether anchors in Mode A and as suspension points in Mode B; load on each point varies with flight mode.
 
 ---
 
@@ -213,20 +250,32 @@ All 4 ring attachment points are reinforced identically so any subset can serve 
 
 ---
 
-## 5. TPU Fabric Suppliers
+## 5. Material Suppliers
 
-Small-to-medium quantity sources:
+Two material lines need sourcing — TPU film for the bladder, uncoated ripstop nylon for the shell.
 
+### 5.1 TPU film (inner bladder)
 
-| Vendor                                   | Website                                              | Price Range                                                              | Shipping to Berkeley, CA                                         | Notes                                            |
-| ---------------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------ | ---------------------------------------------------------------- | ------------------------------------------------ |
-| **OWF Inc** (Outdoor Wilderness Fabrics) | [owfinc.com](https://www.owfinc.com)                 | $6.59/yd (4.8 oz TPU heat-sealable nylon, 59" wide); discounts at 20+ yd | Ships from Idaho. 2–3 day processing, ~4–6 days UPS/USPS ground. | Primary US source for prototypes.                |
-| **DIY Packraft**                         | [diypackraft.com](https://www.diypackraft.com)       | ~$32/yd (190 GSM ripstop, TPU both sides). Sample packs available.       | Ships from Europe (~7–14 days).                                  | High quality. Sells heat-sealable Boston valves. |
-| **Extremtextil**                         | [extremtextil.de](https://www.extremtextil.de/en/)   | €12–25/m (~$13–27/yd) for 30D–210D TPU ripstop. Sold by the meter.       | Ships from Germany (~10–14 days).                                | Wide range of weights and colors.                |
-| **Adventurexpert**                       | [adventurexpert.com](https://www.adventurexpert.com) | ~$21/yd (840D heavy TPU double-sided).                                   | Ships from Europe (~7–14 days).                                  | Reinforcement patches.                           |
+Pure TPU film, 4–6 mil typical, sold by the roll or yard. No fabric backing.
 
+| Vendor                              | Website                                                                                          | Price Range                                                  | Shipping to Berkeley, CA          | Notes                                                                                     |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------ | --------------------------------- | ----------------------------------------------------------------------------------------- |
+| **American Polyfilm**               | [americanpolyfilm.com](https://www.americanpolyfilm.com/inflatables-and-advertising-tpu-film)    | Quote-based; standard inflatables/advertising TPU film lines | Ships from Branford, CT (US).     | Primary recommendation. Specifically sells TPU film for inflatable structures and blimps. |
+| **DIY Packraft (TPU film)**         | [diypackraft.com](https://www.diypackraft.com)                                                   | ~$10–20/yd for plain TPU film widths                         | Ships from Europe (~7–14 days).   | Sells unbacked TPU alongside their coated-fabric line.                                    |
+| **Extremtextil (TPU film options)** | [extremtextil.de](https://www.extremtextil.de/en/)                                               | €8–18/m (~$9–20/yd) depending on thickness                   | Ships from Germany (~10–14 days). | Multiple film thicknesses; good for bladder weight tuning.                                |
 
-**Bulk option:** Alibaba (search "TPU coated ripstop nylon inflatable") — ~$2–6/yd at 200–1000 m MOQ; 2–4 week shipping.
+### 5.2 Ripstop nylon (outer shell, uncoated)
+
+Standard outdoor-grade ripstop. Any uncoated or DWR-treated nylon ripstop works — no airtight coating required.
+
+| Vendor                  | Website                                              | Price Range                                                            | Shipping to Berkeley, CA          | Notes                                                                |
+| ----------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------- | --------------------------------- | -------------------------------------------------------------------- |
+| **Ripstop by the Roll** | [ripstopbytheroll.com](https://ripstopbytheroll.com) | $5–14/yd for 30D–70D ripstop nylon; wide color range                   | Ships from North Carolina (US).   | Primary US source for uncoated ripstop. Many weights and colors.     |
+| **Rockywoods Fabrics**  | [rockywoods.com](https://rockywoods.com)             | $8–18/yd for 40D–210D ripstop nylon                                    | Ships from Colorado (~3–5 days).  | Includes FR-treated and heavier weights for sidewall and patches.    |
+| **Emmakites**           | [emmakites.com](https://www.emmakites.com)           | $5–8/yd small qty; $229/50yd roll (40D ripstop, 19 colors)             | Ships from US warehouse (~5–7 d). | Cheap by the yard; useful for full color match.                      |
+| **Discount Fabrics**    | Berkeley & SF locations                              | Walk-in pricing varies                                                 | **Local pickup**.                 | Limited technical selection but quick local source for prototype lots. |
+
+**Bulk option:** Alibaba (search "ripstop nylon fabric uncoated") — ~$1–3/yd at 200–1000 m MOQ; 2–4 week shipping.
 
 ---
 
@@ -255,66 +304,88 @@ A lightweight plastic check valve (~44 g) with screw cap and internal one-way fl
 - Supports top-up during multi-day events (helium permeates fabric over time)
 - Proven in packrafts and large inflatables
 
-### 7.1 Installation
+### 7.1 Installation on the bladder
 
-Performed during construction while fabric is flat:
+The valve installs on the **inner TPU bladder only** — never on the outer shell. Performed during bladder construction while the film is flat:
 
-1. Select location near bottom or back of envelope (away from glow hardware and visual focal points).
-2. Mark and cut a **4 cm circle** in the TPU panel.
+1. Select location near bottom or back of bladder (away from glow hardware and visual focal points). The location must align with the shell access port (§7.4).
+2. Mark and cut a **4 cm circle** in the TPU film panel.
 3. Insert valve body from the **inside** so the flange sits flat against the interior surface. Three raised alignment bumps face inward.
-4. Cut reinforcement ring from matching TPU fabric: ~12 cm outer diameter, 4 cm center hole.
-5. Place ring over valve flange on the **outside** (TPU side against balloon skin).
+4. Cut reinforcement ring from matching TPU film: ~12 cm outer diameter, 4 cm center hole.
+5. Place ring over valve flange on the **outside** of the bladder (film against bladder skin).
 6. Cover with parchment paper or Teflon sheet.
 7. Heat-weld from center outward (6–8 seconds per section at ~200°C/400°F). Work outward to expel air bubbles.
 8. Remove parchment, roll firmly while cooling, verify bond with gentle tug test.
 
 ### 7.2 Operation
 
-- **Fill / top-up:** Unscrew top cap, attach helium regulator hose (standard nozzle), inflate to target pressure. Check valve prevents backflow on hose removal.
-- **Deflate:** Unscrew middle section for wide port and fast gas release.
+- **Fill / top-up:** Open the shell access port (§7.4), unscrew top cap on the bladder valve, attach helium regulator hose (standard nozzle), inflate to target pressure. Check valve prevents backflow on hose removal. Close the shell access port.
+- **Deflate:** Open the shell access port, unscrew middle section of the valve for wide port and fast gas release.
 
 ### 7.3 Valve Sources
 
-
 | Source                                                                                                                  | Price  | Notes                                   |
 | ----------------------------------------------------------------------------------------------------------------------- | ------ | --------------------------------------- |
-| [DIY Packraft](https://www.diypackraft.com/shop/merchandise/valves/heat-sealable-boston-valve/) (TPU-compatible flange) | ~$8–11 | Preferred                               |
+| [DIY Packraft](https://www.diypackraft.com/shop/merchandise/valves/heat-sealable-boston-valve/) (TPU-compatible flange) | ~$8–11 | Preferred — flange welds directly to TPU film. |
 | Amazon / AliExpress (generic)                                                                                           | ~$2–5  | May require adhesive instead of welding |
 
 
-Order early to practice reinforcement-ring welding on scrap fabric before final installation.
+Order early to practice reinforcement-ring welding on scrap TPU film before final installation.
+
+### 7.4 Shell access port
+
+Because the valve lives on the bladder under the shell, the shell needs a closeable opening directly over the valve so the valve can be reached for fill, top-up, and deflate without disassembling the envelope.
+
+**Design:**
+
+- Cut a ~10–15 cm diameter circular opening in the shell, centered over the bladder valve location.
+- Reinforce the opening's edge with a sewn-on ripstop facing strip (double layer).
+- Closure: hook-and-loop (Velcro) flap, sewn on three sides like a pocket, opening downward so it stays closed under any orientation. Hook-and-loop is preferred over a zipper for cost, weight, weather sealing, and absence of metal hardware near the valve.
+- Mark the flap exterior with a discreet label or color so the operator can find the fill point quickly in the field.
+
+**Why a port instead of an exposed valve:** the shell exists specifically to protect the bladder and host hardware. An exposed valve would require either cutting a permanent hole in the shell (defeating UV/abrasion protection at that point) or putting the valve through a sewn-in grommet that loads the bladder skin during inflation. A pocketed access flap keeps the valve hidden, isolates the bladder from any port-edge stress, and stays serviceable.
 
 ---
 
 ## 8. Prototyping Plan
 
+The two layers are validated separately before being assembled, so problems in one layer are caught before they're hidden by the other.
 
-| Phase | Scope              | Materials / Actions                                                                                              |
-| ----- | ------------------ | ---------------------------------------------------------------------------------------------------------------- |
-| 1     | 1 m diameter model | 10–15 yd from OWF Inc (~$70–100) + one Boston valve. Validate pattern, welding, valve install, inflation.        |
-| 2     | Full 2–3 m build   | Install Boston valve. Outdoor wind test with glow payload.                                                       |
-| 3     | Refinement         | If 4.8 oz fabric is insufficient in wind, upgrade to 190 GSM (DIY Packraft) or add welded reinforcement patches. |
-| 4     | Glow integration   | Test LED strip / EL wire mounting with welded TPU patches before final assembly.                                 |
-| 5     | Expert review      | Consult INFLATABILL with prototype photos.                                                                       |
+| Phase | Scope                       | Materials / Actions                                                                                                                                                 |
+| ----- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1     | 1 m bladder only            | TPU film from American Polyfilm (~5–10 yd, 4–6 mil). Weld flat-circles + sidewall band geometry. Install Boston valve. **Leak test**: inflate with air and hold ≥24 h. |
+| 2     | 1 m shell only              | 5–10 yd uncoated ripstop from Ripstop by the Roll. Sew matching geometry, slightly oversized. Add the 4 ring attachment patches and a §7.4 access port. Fit-check on a foam mock-up of the ring. |
+| 3     | 1 m integrated assembly     | Insert bladder into shell, inflate. Verify retention (bladder fills shell, doesn't bunch), valve accessibility through the access port, and that ring attachments load the shell only.  |
+| 4     | Full 2–3 m build            | Scale both layers; outdoor wind test with glow payload.                                                                                                              |
+| 5     | Refinement                  | If shell is undersized, recut. If bladder permeates too fast, step up TPU film thickness. If wind loading deforms the silhouette, revisit shell weight.              |
+| 6     | Glow integration            | Test LED strip / EL wire mounting using the shell's sewn patches (no bladder modification needed at any point).                                                      |
+| 7     | Expert review               | Consult INFLATABILL with prototype photos.                                                                                                                          |
 
 
 **Required tools:**
 
-- Flat iron (or leather iron with flat bottom)
+- Flat iron (or leather iron with flat bottom) — for bladder welding
 - Parchment paper or Teflon sheet
 - Silicone seam roller
 - Sharp fabric scissors / rotary cutter
-- Heat-sealable Boston valve + spare TPU for reinforcement rings
+- Heat-sealable Boston valve + spare TPU film for reinforcement rings
+- Sewing machine (domestic is sufficient for 40D–70D ripstop) — for shell construction
+- Polyester sewing thread, ripstop-appropriate needles
+- Hook-and-loop tape (~30 cm) for the §7.4 shell access port
 
 ---
 
 ## 9. Open Items
 
-- Panel cutting patterns
-- Fabric quantity calculations
-- Tether reinforcement method
-- Step-by-step assembly order
-- Glow mounting details (LED strip routing on ring; envelope-internal lighting if any)
+- Panel cutting patterns (for both bladder and shell)
+- Fabric quantity calculations (TPU film and ripstop)
+- TPU film thickness selection (4 mil vs 6 mil vs heavier)
+- Shell-to-bladder size ratio empirical tuning (target ~2–3% linear oversize for shell)
+- Whether the bladder needs internal tethers or alignment tabs to stay centered in the shell, or whether inflation alone keeps it centered
+- Shell access port closure detail (Velcro size/grade, flap geometry)
+- Tether reinforcement method (shell patch construction)
+- Step-by-step assembly order (bladder build → shell build → bladder insertion → inflation)
+- Glow mounting details (LED strip routing on ring; shell-internal lighting if any)
 - Ring segment count and ferrule hardware sourcing
 - Tension element selection (springs vs. shock cord vs. bungee) — empirical test
 - Ground anchor hardware and footprint dimensions per flight mode

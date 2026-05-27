@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lift Calculator &mdash; MicroUFOne</title>
+<style>
+  :root {
+    --bg: #0b0d12;
+    --bg-elev: #141821;
+    --bg-card: #181c26;
+    --border: #262b38;
+    --text: #e8ecf4;
+    --text-dim: #9aa3b5;
+    --text-mute: #6a7388;
+    --accent: #ffb968;
+    --accent-soft: rgba(255, 185, 104, 0.18);
+    --green: #6ee7a8;
+    --green-soft: rgba(110, 231, 168, 0.15);
+    --red: #f87171;
+    --red-soft: rgba(248, 113, 113, 0.12);
+    --nav-h: 52px;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  body {
+    padding-top: var(--nav-h);
+    background:
+      radial-gradient(1200px 600px at 20% -10%, rgba(255, 185, 104, 0.07), transparent 60%),
+      radial-gradient(900px 500px at 90% 110%, rgba(110, 231, 168, 0.05), transparent 60%),
+      var(--bg);
+  }
+
+  .site-nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    height: var(--nav-h);
+    background: rgba(14, 17, 24, 0.96);
+    border-bottom: 1px solid #3a4256;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+  }
+  .site-nav-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    height: 100%;
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+  .site-nav-links {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .site-nav-links a {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-dim);
+    text-decoration: none;
+    padding: 8px 20px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    transition: color 0.15s, background 0.15s, border-color 0.15s;
+  }
+  .site-nav-links a:hover {
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.06);
+    border-color: var(--border);
+  }
+  .site-nav-links a.active {
+    color: var(--accent);
+    background: var(--accent-soft);
+    border-color: rgba(255, 185, 104, 0.35);
+    font-weight: 600;
+  }
+
+  header {
+    padding: 28px 32px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  header h1 { margin: 0; font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
+  header p { margin: 0; color: var(--text-dim); font-size: 14px; line-height: 1.5; }
+  header p a { color: var(--accent); text-decoration: none; border-bottom: 1px dotted var(--accent-soft); }
+
+  .calc-layout {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 24px 32px 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 700px) {
+    .calc-layout { grid-template-columns: 1fr; padding: 16px; }
+    header { padding: 20px 18px 14px; }
+  }
+
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  }
+  .card-head {
+    padding: 14px 16px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .card-head h2 { margin: 0; font-size: 15px; font-weight: 600; letter-spacing: 0.01em; }
+  .card-head .sub { margin-top: 2px; font-size: 12px; color: var(--text-mute); }
+  .card-body { padding: 16px; }
+
+  .field { margin-bottom: 14px; }
+  .field:last-child { margin-bottom: 0; }
+  .field label {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--text-dim);
+    margin-bottom: 5px;
+  }
+  .field input[type="number"],
+  .field select {
+    width: 100%;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 14px;
+    color: var(--text);
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .field input[type="number"]:focus,
+  .field select:focus {
+    border-color: var(--accent);
+  }
+  .field .hint {
+    font-size: 11px;
+    color: var(--text-mute);
+    margin-top: 3px;
+  }
+
+  .results-card { grid-column: 1 / -1; }
+
+  .result-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 700px) {
+    .result-grid { grid-template-columns: 1fr; }
+  }
+  .result-group {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .result-group h3 {
+    margin: 0 0 10px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-mute);
+  }
+  .result-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 4px 0;
+    font-size: 13.5px;
+  }
+  .result-row + .result-row { border-top: 1px solid rgba(255,255,255,0.04); }
+  .result-label { color: var(--text-dim); }
+  .result-value { font-weight: 600; color: var(--text); text-align: right; }
+  .result-value.accent { color: var(--accent); }
+  .result-value.green { color: var(--green); }
+
+  .assumptions {
+    grid-column: 1 / -1;
+    margin-top: 4px;
+  }
+  .assumptions p {
+    margin: 0;
+    font-size: 11.5px;
+    color: var(--text-mute);
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+
+<nav class="site-nav" aria-label="Site">
+  <div class="site-nav-inner">
+    <div class="site-nav-links">
+      <a href="renders-new.html">Renders (new)</a>
+      <a href="renders.html">Renders (original)</a>
+      <a href="specs.html">Specs</a>
+      <a href="calculator.html" class="active">Calculator</a>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <h1>Helium Lift Calculator</h1>
+  <p>Computes minimum bladder &amp; assembly size, helium volume, envelope weight, and cost for the dual-layer
+     TPU&nbsp;bladder + ripstop&nbsp;shell design (&sect;2.1 geometry) from <a href="specs.html">specs</a>.
+     All material weights use conservative (pessimistic) estimates.</p>
+</header>
+
+<div class="calc-layout">
+
+  <div class="card">
+    <div class="card-head">
+      <h2>Lift &amp; Geometry</h2>
+      <div class="sub">Primary parameters</div>
+    </div>
+    <div class="card-body">
+      <div class="field">
+        <label for="in-lift">Required net lifting capacity (kg)</label>
+        <input type="number" id="in-lift" value="2" min="0.01" max="100" step="0.1" />
+        <div class="hint">Payload the balloon must support after its own weight is subtracted</div>
+      </div>
+      <div class="field">
+        <label for="in-ar">Aspect ratio h/d</label>
+        <input type="number" id="in-ar" value="0.175" min="0.05" max="0.40" step="0.005" />
+        <div class="hint">Disc thickness &divide; diameter (0.175 = render default)</div>
+      </div>
+      <div class="field">
+        <label for="in-elevation">Target elevation (m)</label>
+        <input type="number" id="in-elevation" value="20" min="1" max="200" step="1" />
+        <div class="hint">Height above ground; tether length &asymp; elevation</div>
+      </div>
+      <div class="field">
+        <label for="in-tethers">Number of tether cables</label>
+        <input type="number" id="in-tethers" value="3" min="1" max="8" step="1" />
+        <div class="hint">Braided nylon #18 mason line &mdash; 1.0 g/m, 25 kg break</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <h2>Materials &amp; Pricing</h2>
+      <div class="sub">Envelope construction choices</div>
+    </div>
+    <div class="card-body">
+      <div class="field">
+        <label for="in-tpu">TPU film thickness (bladder)</label>
+        <select id="in-tpu">
+          <option value="4">4 mil (0.10 mm) &mdash; lightest</option>
+          <option value="5">5 mil (0.13 mm)</option>
+          <option value="6" selected>6 mil (0.15 mm) &mdash; most durable</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="in-ripstop">Shell fabric denier</label>
+        <select id="in-ripstop">
+          <option value="40">40D &mdash; lighter</option>
+          <option value="70" selected>70D &mdash; more durable</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="in-he-price">Helium price ($ / cu ft)</label>
+        <input type="number" id="in-he-price" value="2.50" min="0.50" max="10" step="0.10" />
+        <div class="hint">CA rental avg: $1.50&ndash;$3.50/cu ft depending on tank size</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card results-card">
+    <div class="card-head">
+      <h2>Results</h2>
+      <div class="sub">Conservative / pessimistic estimates &mdash; update live</div>
+    </div>
+    <div class="card-body">
+      <div class="result-grid">
+
+        <div class="result-group">
+          <h3>Dimensions</h3>
+          <div class="result-row">
+            <span class="result-label">Min. bladder diameter</span>
+            <span class="result-value accent" id="out-bladder-d"></span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Min. overall diameter</span>
+            <span class="result-value accent" id="out-total-d"></span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Disc thickness</span>
+            <span class="result-value" id="out-thickness"></span>
+          </div>
+        </div>
+
+        <div class="result-group">
+          <h3>Helium</h3>
+          <div class="result-row">
+            <span class="result-label">Volume required</span>
+            <span class="result-value accent" id="out-he-vol"></span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Helium mass</span>
+            <span class="result-value" id="out-he-mass"></span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Gross buoyant lift</span>
+            <span class="result-value" id="out-gross-lift"></span>
+          </div>
+        </div>
+
+        <div class="result-group">
+          <h3>Envelope Weight (pessimistic)</h3>
+          <div class="result-row">
+            <span class="result-label">Bladder (TPU film)</span>
+            <span class="result-value" id="out-bladder-wt"></span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Shell (ripstop nylon)</span>
+            <span class="result-value" id="out-shell-wt"></span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Support ring (fiberglass 8mm)</span>
+            <span class="result-value" id="out-ring-wt"></span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Tether cables</span>
+            <span class="result-value" id="out-tether-wt"></span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Boston valve</span>
+            <span class="result-value" id="out-valve-wt">0.044 kg</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Total assembly weight</span>
+            <span class="result-value green" id="out-total-wt"></span>
+          </div>
+        </div>
+
+        <div class="result-group">
+          <h3>Estimated Cost</h3>
+          <div class="result-row">
+            <span class="result-label">Helium</span>
+            <span class="result-value" id="out-cost-he"></span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Bladder material</span>
+            <span class="result-value" id="out-cost-bladder"></span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Shell material</span>
+            <span class="result-value" id="out-cost-shell"></span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Total (materials + helium)</span>
+            <span class="result-value green" id="out-cost-total"></span>
+          </div>
+        </div>
+
+        <div class="result-group" style="grid-column: 1 / -1;">
+          <h3>Cost Assumptions</h3>
+          <div class="result-row">
+            <span class="result-label">Helium (CA rental, 55&ndash;125 cu ft tank)</span>
+            <span class="result-value" id="out-assume-he"></span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">TPU film (DIY Packraft, Extremtextil)</span>
+            <span class="result-value">$6.50 &ndash; $15.00 /m&sup2;</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Ripstop nylon 40&ndash;70D (Ripstop by the Roll, Rockywoods, Emmakites)</span>
+            <span class="result-value">$3.50 &ndash; $13.50 /m&sup2;</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Ripstop nylon 190D+ sidewall (Rockywoods)</span>
+            <span class="result-value">$6.00 &ndash; $13.50 /m&sup2;</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Fabric prices converted at ~1.35 m&sup2; per linear yard (58&ndash;60&Prime; width)</span>
+            <span class="result-value" style="color: var(--text-mute);">incl. 15% seam/waste</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="assumptions">
+        <p>
+          <strong>Assumptions:</strong>
+          Air density 1.204 kg/m&sup3; (20&deg;C, 1 atm).
+          Balloon-grade helium (97% purity, effective density 0.198 kg/m&sup3;).
+          Net lift &asymp; 1.007 kg/m&sup3;.
+          &sect;2.1 geometry (cylinder + bulging caps, bulge factor 1.05).
+          Shell 2.5% linearly oversized vs bladder.
+          15% seam/waste allowance on all material areas.
+          Sidewall shell uses 190D+ ripstop at 150 g/m&sup2;.
+          Boston valve 44 g.
+          Support ring: 8 mm solid fiberglass rod at 101 g/m.
+          Tether: braided nylon #18 mason line at 1.0 g/m (25 kg break strength).
+          Material prices from specs &sect;5 &amp; alternative-materials.md (DIY Packraft, Extremtextil, Ripstop by the Roll, Rockywoods, Emmakites).
+          Helium pricing from CA balloon vendors (LA Balloons, The Balloonery, Balloon Haven) and retail (Walmart, Party City), 2026.
+        </p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const PHYS = {
+  rhoAir: 1.204,
+  rhoHeBalloonGrade: 0.1975,
+  netLiftPerM3: 1.007,
+  bulgeFactor: 1.05,
+  seamFactor: 1.15,
+  shellOversize: 1.025,
+  valveMassKg: 0.044,
+  overallDiameterFactor: 1.2,
+  fiberglassRodGPerM: 101,
+  tetherCordGPerM: 1.0,
+};
+
+const TPU_GSM = { 4: 130, 5: 160, 6: 190 };
+const RIPSTOP_GSM = { 40: 45, 70: 80 };
+const SIDEWALL_GSM = 150;
+
+const TPU_PRICE_M2 = { lo: 6.50, hi: 15.00 };
+const RIPSTOP_PRICE_M2 = { lo: 3.50, hi: 13.50 };
+const SIDEWALL_PRICE_M2 = { lo: 6.00, hi: 13.50 };
+
+const M3_TO_CUFT = 35.3147;
+const M3_TO_L = 1000;
+const M_TO_FT = 3.28084;
+
+function calcSurfaceArea(r, h) {
+  const faces = 2 * Math.PI * r * r;
+  const sidewall = 2 * Math.PI * r * h;
+  return { faces, sidewall, total: faces + sidewall };
+}
+
+function solve(liftKg, ar, tpuMil, ripstopD, hePrice, elevation, numTethers) {
+  const tpuGsm = TPU_GSM[tpuMil];
+  const faceGsm = RIPSTOP_GSM[ripstopD];
+  const tetherMassKg = elevation * numTethers * PHYS.tetherCordGPerM / 1000;
+
+  let r = Math.cbrt(liftKg / (PHYS.netLiftPerM3 * 2 * Math.PI * ar * PHYS.bulgeFactor));
+
+  for (let i = 0; i < 20; i++) {
+    const d = 2 * r;
+    const h = ar * d;
+    const overallD = d * PHYS.overallDiameterFactor;
+    const ringCircum = Math.PI * overallD;
+    const ringMassKg = ringCircum * PHYS.fiberglassRodGPerM / 1000;
+
+    const vol = Math.PI * r * r * h * PHYS.bulgeFactor;
+
+    const bladderSA = calcSurfaceArea(r, h);
+    const rShell = r * PHYS.shellOversize;
+    const hShell = ar * 2 * rShell;
+    const shellSA = calcSurfaceArea(rShell, hShell);
+
+    const bladderMat = bladderSA.total * PHYS.seamFactor;
+    const shellFaceMat = shellSA.faces * PHYS.seamFactor;
+    const shellSideMat = shellSA.sidewall * PHYS.seamFactor;
+
+    const bladderMass = bladderMat * tpuGsm / 1000;
+    const shellMass = (shellFaceMat * faceGsm + shellSideMat * SIDEWALL_GSM) / 1000;
+    const totalMass = bladderMass + shellMass + PHYS.valveMassKg + ringMassKg + tetherMassKg;
+
+    const grossLift = vol * PHYS.netLiftPerM3;
+
+    const rNew = r * Math.cbrt(Math.max(0.01, (liftKg + totalMass) / grossLift));
+    if (Math.abs(rNew - r) < 1e-7) { r = rNew; break; }
+    r = rNew;
+  }
+
+  const d = 2 * r;
+  const h = ar * d;
+  const overallD = d * PHYS.overallDiameterFactor;
+  const ringCircum = Math.PI * overallD;
+  const ringMassKg = ringCircum * PHYS.fiberglassRodGPerM / 1000;
+  const vol = Math.PI * r * r * h * PHYS.bulgeFactor;
+
+  const bladderSA = calcSurfaceArea(r, h);
+  const rShell = r * PHYS.shellOversize;
+  const hShell = ar * 2 * rShell;
+  const shellSA = calcSurfaceArea(rShell, hShell);
+
+  const bladderMat = bladderSA.total * PHYS.seamFactor;
+  const shellFaceMat = shellSA.faces * PHYS.seamFactor;
+  const shellSideMat = shellSA.sidewall * PHYS.seamFactor;
+
+  const bladderMassKg = bladderMat * tpuGsm / 1000;
+  const shellMassKg = (shellFaceMat * faceGsm + shellSideMat * SIDEWALL_GSM) / 1000;
+  const totalAssemblyKg = bladderMassKg + shellMassKg + PHYS.valveMassKg + ringMassKg + tetherMassKg;
+
+  const grossLiftKg = vol * PHYS.netLiftPerM3;
+  const heMassKg = vol * PHYS.rhoHeBalloonGrade;
+
+  const volCuFt = vol * M3_TO_CUFT;
+  const volL = vol * M3_TO_L;
+
+  const costHe = volCuFt * hePrice;
+  const costBladderLo = bladderMat * TPU_PRICE_M2.lo;
+  const costBladderHi = bladderMat * TPU_PRICE_M2.hi;
+  const costShellLo = shellFaceMat * RIPSTOP_PRICE_M2.lo + shellSideMat * SIDEWALL_PRICE_M2.lo;
+  const costShellHi = shellFaceMat * RIPSTOP_PRICE_M2.hi + shellSideMat * SIDEWALL_PRICE_M2.hi;
+  const costTotalLo = costHe + costBladderLo + costShellLo;
+  const costTotalHi = costHe + costBladderHi + costShellHi;
+
+  return {
+    bladderD_m: d,
+    bladderD_ft: d * M_TO_FT,
+    totalD_m: overallD,
+    totalD_ft: overallD * M_TO_FT,
+    thickness_m: h,
+    thickness_ft: h * M_TO_FT,
+    volL, volCuFt,
+    heMassKg, grossLiftKg,
+    bladderMassKg, shellMassKg, ringMassKg, tetherMassKg, totalAssemblyKg,
+    costHe,
+    costBladderLo, costBladderHi,
+    costShellLo, costShellHi,
+    costTotalLo, costTotalHi,
+  };
+}
+
+function fmt(n, decimals) { return n.toFixed(decimals); }
+function fmtDual(m, ft, dp) { return `${fmt(m, dp)} m (${fmt(ft, dp)} ft)`; }
+function fmtRange(lo, hi) { return `$${fmt(lo, 2)} – $${fmt(hi, 2)}`; }
+
+function update() {
+  const liftKg = Math.max(0.01, parseFloat(document.getElementById('in-lift').value) || 2);
+  const ar = Math.max(0.05, Math.min(0.4, parseFloat(document.getElementById('in-ar').value) || 0.175));
+  const tpu = parseInt(document.getElementById('in-tpu').value);
+  const ripstop = parseInt(document.getElementById('in-ripstop').value);
+  const hePrice = Math.max(0, parseFloat(document.getElementById('in-he-price').value) || 2.50);
+  const elevation = Math.max(1, parseFloat(document.getElementById('in-elevation').value) || 20);
+  const numTethers = Math.max(1, parseInt(document.getElementById('in-tethers').value) || 3);
+
+  const r = solve(liftKg, ar, tpu, ripstop, hePrice, elevation, numTethers);
+
+  document.getElementById('out-bladder-d').textContent = fmtDual(r.bladderD_m, r.bladderD_ft, 2);
+  document.getElementById('out-total-d').textContent = fmtDual(r.totalD_m, r.totalD_ft, 2);
+  document.getElementById('out-thickness').textContent = fmtDual(r.thickness_m, r.thickness_ft, 2);
+
+  document.getElementById('out-he-vol').textContent = `${fmt(r.volL, 1)} L (${fmt(r.volCuFt, 1)} cu ft)`;
+  document.getElementById('out-he-mass').textContent = `${fmt(r.heMassKg, 3)} kg`;
+  document.getElementById('out-gross-lift').textContent = `${fmt(r.grossLiftKg, 3)} kg`;
+
+  document.getElementById('out-bladder-wt').textContent = `${fmt(r.bladderMassKg, 3)} kg`;
+  document.getElementById('out-shell-wt').textContent = `${fmt(r.shellMassKg, 3)} kg`;
+  document.getElementById('out-ring-wt').textContent = `${fmt(r.ringMassKg, 3)} kg`;
+  document.getElementById('out-tether-wt').textContent = `${fmt(r.tetherMassKg, 3)} kg`;
+  document.getElementById('out-total-wt').textContent = `${fmt(r.totalAssemblyKg, 3)} kg`;
+
+  document.getElementById('out-cost-he').textContent = `$${fmt(r.costHe, 2)}`;
+  document.getElementById('out-cost-bladder').textContent = fmtRange(r.costBladderLo, r.costBladderHi);
+  document.getElementById('out-cost-shell').textContent = fmtRange(r.costShellLo, r.costShellHi);
+  document.getElementById('out-cost-total').textContent = fmtRange(r.costTotalLo, r.costTotalHi);
+
+  document.getElementById('out-assume-he').textContent = `$${fmt(hePrice, 2)} / cu ft`;
+}
+
+document.querySelectorAll('#in-lift, #in-ar, #in-tpu, #in-ripstop, #in-he-price, #in-elevation, #in-tethers')
+  .forEach(el => el.addEventListener('input', update));
+
+update();
+</script>
+</body>
+</html>
