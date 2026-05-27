@@ -156,6 +156,27 @@
     color: var(--text-mute);
     margin-top: 3px;
   }
+  .field-check label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 0;
+    cursor: pointer;
+    color: var(--text);
+    font-size: 13.5px;
+    font-weight: 500;
+  }
+  .field-check input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+  .field-check .hint { margin-top: 6px; }
+  .field.is-disabled label,
+  .field.is-disabled .hint { opacity: 0.45; }
+  .field.is-disabled select,
+  .field.is-disabled input { opacity: 0.5; pointer-events: none; }
 
   .results-card { grid-column: 1 / -1; }
 
@@ -211,7 +232,7 @@
 <nav class="site-nav" aria-label="Site">
   <div class="site-nav-inner">
     <div class="site-nav-links">
-      <a href="renders-new.html">Renders (new)</a>
+      <a href="renders-new.html">Renders with bladder</a>
       <a href="renders.html">Renders (original)</a>
       <a href="specs.html">Specs</a>
       <a href="calculator.html" class="active">Calculator</a>
@@ -263,19 +284,33 @@
       <div class="sub">Envelope construction choices</div>
     </div>
     <div class="card-body">
-      <div class="field">
+      <div class="field field-check">
+        <label>
+          <input type="checkbox" id="in-with-bladder" checked />
+          <span>With bladder (dual-layer design)</span>
+        </label>
+        <div class="hint">Uncheck for single-layer (one TPU-coated layer holds gas &amp; loads)</div>
+      </div>
+      <div class="field" id="field-shell-mat">
+        <label for="in-shell-mat">Shell material</label>
+        <select id="in-shell-mat">
+          <option value="uncoated" selected>Uncoated ripstop nylon</option>
+          <option value="tpu">TPU-coated ripstop nylon</option>
+        </select>
+      </div>
+      <div class="field" id="field-tpu">
         <label for="in-tpu">TPU film thickness (bladder)</label>
         <select id="in-tpu">
-          <option value="4">4 mil (0.10 mm) &mdash; lightest</option>
+          <option value="4" selected>4 mil (0.10 mm) &mdash; lightest</option>
           <option value="5">5 mil (0.13 mm)</option>
-          <option value="6" selected>6 mil (0.15 mm) &mdash; most durable</option>
+          <option value="6">6 mil (0.15 mm) &mdash; most durable</option>
         </select>
       </div>
       <div class="field">
         <label for="in-ripstop">Shell fabric denier</label>
         <select id="in-ripstop">
-          <option value="40">40D &mdash; lighter</option>
-          <option value="70" selected>70D &mdash; more durable</option>
+          <option value="40" selected>40D &mdash; lighter</option>
+          <option value="70">70D &mdash; more durable</option>
         </select>
       </div>
       <div class="field">
@@ -328,12 +363,12 @@
 
         <div class="result-group">
           <h3>Envelope Weight (pessimistic)</h3>
-          <div class="result-row">
+          <div class="result-row" id="row-bladder-wt">
             <span class="result-label">Bladder (TPU film)</span>
             <span class="result-value" id="out-bladder-wt"></span>
           </div>
           <div class="result-row">
-            <span class="result-label">Shell (ripstop nylon)</span>
+            <span class="result-label" id="lbl-shell-wt">Shell (ripstop nylon)</span>
             <span class="result-value" id="out-shell-wt"></span>
           </div>
           <div class="result-row">
@@ -360,12 +395,12 @@
             <span class="result-label">Helium</span>
             <span class="result-value" id="out-cost-he"></span>
           </div>
-          <div class="result-row">
+          <div class="result-row" id="row-cost-bladder">
             <span class="result-label">Bladder material</span>
             <span class="result-value" id="out-cost-bladder"></span>
           </div>
           <div class="result-row">
-            <span class="result-label">Shell material</span>
+            <span class="result-label" id="lbl-cost-shell">Shell material</span>
             <span class="result-value" id="out-cost-shell"></span>
           </div>
           <div class="result-row">
@@ -393,6 +428,14 @@
             <span class="result-value">$6.00 &ndash; $13.50 /m&sup2;</span>
           </div>
           <div class="result-row">
+            <span class="result-label">TPU-coated ripstop 40&ndash;70D (OWF, Extremtextil, DIY Packraft)</span>
+            <span class="result-value">$7.00 &ndash; $22.00 /m&sup2;</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">TPU-coated ripstop 190D+ sidewall</span>
+            <span class="result-value">$15.00 &ndash; $30.00 /m&sup2;</span>
+          </div>
+          <div class="result-row">
             <span class="result-label">Fabric prices converted at ~1.35 m&sup2; per linear yard (58&ndash;60&Prime; width)</span>
             <span class="result-value" style="color: var(--text-mute);">incl. 15% seam/waste</span>
           </div>
@@ -407,13 +450,14 @@
           Balloon-grade helium (97% purity, effective density 0.198 kg/m&sup3;).
           Net lift &asymp; 1.007 kg/m&sup3;.
           &sect;2.1 geometry (cylinder + bulging caps, bulge factor 1.05).
-          Shell 2.5% linearly oversized vs bladder.
+          Dual-layer mode: shell 2.5% linearly oversized vs bladder; uncoated face 45/80 g/m&sup2; (40D/70D), 190D+ sidewall 150 g/m&sup2;.
+          Single-layer mode: bladder thickness ignored; one TPU-coated ripstop layer holds gas &amp; loads.
+          TPU-coated ripstop: ~85 g/m&sup2; (40D), ~125 g/m&sup2; (70D); 210 g/m&sup2; sidewall.
           15% seam/waste allowance on all material areas.
-          Sidewall shell uses 190D+ ripstop at 150 g/m&sup2;.
           Boston valve 44 g.
           Support ring: 8 mm solid fiberglass rod at 101 g/m.
           Tether: braided nylon #18 mason line at 1.0 g/m (25 kg break strength).
-          Material prices from specs &sect;5 &amp; alternative-materials.md (DIY Packraft, Extremtextil, Ripstop by the Roll, Rockywoods, Emmakites).
+          Material prices from specs &sect;5 &amp; alternative-materials.md (DIY Packraft, Extremtextil, Ripstop by the Roll, Rockywoods, Emmakites, OWF).
           Helium pricing from CA balloon vendors (LA Balloons, The Balloonery, Balloon Haven) and retail (Walmart, Party City), 2026.
         </p>
       </div>
@@ -439,10 +483,14 @@ const PHYS = {
 const TPU_GSM = { 4: 130, 5: 160, 6: 190 };
 const RIPSTOP_GSM = { 40: 45, 70: 80 };
 const SIDEWALL_GSM = 150;
+const RIPSTOP_TPU_GSM = { 40: 85, 70: 125 };
+const SIDEWALL_TPU_GSM = 210;
 
 const TPU_PRICE_M2 = { lo: 6.50, hi: 15.00 };
 const RIPSTOP_PRICE_M2 = { lo: 3.50, hi: 13.50 };
 const SIDEWALL_PRICE_M2 = { lo: 6.00, hi: 13.50 };
+const RIPSTOP_TPU_PRICE_M2 = { lo: 7.00, hi: 22.00 };
+const SIDEWALL_TPU_PRICE_M2 = { lo: 15.00, hi: 30.00 };
 
 const M3_TO_CUFT = 35.3147;
 const M3_TO_L = 1000;
@@ -454,9 +502,13 @@ function calcSurfaceArea(r, h) {
   return { faces, sidewall, total: faces + sidewall };
 }
 
-function solve(liftKg, ar, tpuMil, ripstopD, hePrice, elevation, numTethers) {
+function solve(liftKg, ar, tpuMil, ripstopD, hePrice, elevation, numTethers, withBladder, shellMat) {
   const tpuGsm = TPU_GSM[tpuMil];
-  const faceGsm = RIPSTOP_GSM[ripstopD];
+  const faceGsm = shellMat === 'tpu' ? RIPSTOP_TPU_GSM[ripstopD] : RIPSTOP_GSM[ripstopD];
+  const sideGsm = shellMat === 'tpu' ? SIDEWALL_TPU_GSM : SIDEWALL_GSM;
+  const facePrice = shellMat === 'tpu' ? RIPSTOP_TPU_PRICE_M2 : RIPSTOP_PRICE_M2;
+  const sidePrice = shellMat === 'tpu' ? SIDEWALL_TPU_PRICE_M2 : SIDEWALL_PRICE_M2;
+  const shellRadiusFactor = withBladder ? PHYS.shellOversize : 1.0;
   const tetherMassKg = elevation * numTethers * PHYS.tetherCordGPerM / 1000;
 
   let r = Math.cbrt(liftKg / (PHYS.netLiftPerM3 * 2 * Math.PI * ar * PHYS.bulgeFactor));
@@ -470,17 +522,21 @@ function solve(liftKg, ar, tpuMil, ripstopD, hePrice, elevation, numTethers) {
 
     const vol = Math.PI * r * r * h * PHYS.bulgeFactor;
 
-    const bladderSA = calcSurfaceArea(r, h);
-    const rShell = r * PHYS.shellOversize;
+    const rShell = r * shellRadiusFactor;
     const hShell = ar * 2 * rShell;
     const shellSA = calcSurfaceArea(rShell, hShell);
 
-    const bladderMat = bladderSA.total * PHYS.seamFactor;
     const shellFaceMat = shellSA.faces * PHYS.seamFactor;
     const shellSideMat = shellSA.sidewall * PHYS.seamFactor;
 
-    const bladderMass = bladderMat * tpuGsm / 1000;
-    const shellMass = (shellFaceMat * faceGsm + shellSideMat * SIDEWALL_GSM) / 1000;
+    let bladderMass = 0;
+    if (withBladder) {
+      const bladderSA = calcSurfaceArea(r, h);
+      const bladderMat = bladderSA.total * PHYS.seamFactor;
+      bladderMass = bladderMat * tpuGsm / 1000;
+    }
+
+    const shellMass = (shellFaceMat * faceGsm + shellSideMat * sideGsm) / 1000;
     const totalMass = bladderMass + shellMass + PHYS.valveMassKg + ringMassKg + tetherMassKg;
 
     const grossLift = vol * PHYS.netLiftPerM3;
@@ -497,17 +553,22 @@ function solve(liftKg, ar, tpuMil, ripstopD, hePrice, elevation, numTethers) {
   const ringMassKg = ringCircum * PHYS.fiberglassRodGPerM / 1000;
   const vol = Math.PI * r * r * h * PHYS.bulgeFactor;
 
-  const bladderSA = calcSurfaceArea(r, h);
-  const rShell = r * PHYS.shellOversize;
+  const rShell = r * shellRadiusFactor;
   const hShell = ar * 2 * rShell;
   const shellSA = calcSurfaceArea(rShell, hShell);
 
-  const bladderMat = bladderSA.total * PHYS.seamFactor;
   const shellFaceMat = shellSA.faces * PHYS.seamFactor;
   const shellSideMat = shellSA.sidewall * PHYS.seamFactor;
 
-  const bladderMassKg = bladderMat * tpuGsm / 1000;
-  const shellMassKg = (shellFaceMat * faceGsm + shellSideMat * SIDEWALL_GSM) / 1000;
+  let bladderMat = 0;
+  let bladderMassKg = 0;
+  if (withBladder) {
+    const bladderSA = calcSurfaceArea(r, h);
+    bladderMat = bladderSA.total * PHYS.seamFactor;
+    bladderMassKg = bladderMat * tpuGsm / 1000;
+  }
+
+  const shellMassKg = (shellFaceMat * faceGsm + shellSideMat * sideGsm) / 1000;
   const totalAssemblyKg = bladderMassKg + shellMassKg + PHYS.valveMassKg + ringMassKg + tetherMassKg;
 
   const grossLiftKg = vol * PHYS.netLiftPerM3;
@@ -517,14 +578,15 @@ function solve(liftKg, ar, tpuMil, ripstopD, hePrice, elevation, numTethers) {
   const volL = vol * M3_TO_L;
 
   const costHe = volCuFt * hePrice;
-  const costBladderLo = bladderMat * TPU_PRICE_M2.lo;
-  const costBladderHi = bladderMat * TPU_PRICE_M2.hi;
-  const costShellLo = shellFaceMat * RIPSTOP_PRICE_M2.lo + shellSideMat * SIDEWALL_PRICE_M2.lo;
-  const costShellHi = shellFaceMat * RIPSTOP_PRICE_M2.hi + shellSideMat * SIDEWALL_PRICE_M2.hi;
+  const costBladderLo = withBladder ? bladderMat * TPU_PRICE_M2.lo : 0;
+  const costBladderHi = withBladder ? bladderMat * TPU_PRICE_M2.hi : 0;
+  const costShellLo = shellFaceMat * facePrice.lo + shellSideMat * sidePrice.lo;
+  const costShellHi = shellFaceMat * facePrice.hi + shellSideMat * sidePrice.hi;
   const costTotalLo = costHe + costBladderLo + costShellLo;
   const costTotalHi = costHe + costBladderHi + costShellHi;
 
   return {
+    withBladder, shellMat,
     bladderD_m: d,
     bladderD_ft: d * M_TO_FT,
     totalD_m: overallD,
@@ -545,7 +607,29 @@ function fmt(n, decimals) { return n.toFixed(decimals); }
 function fmtDual(m, ft, dp) { return `${fmt(m, dp)} m (${fmt(ft, dp)} ft)`; }
 function fmtRange(lo, hi) { return `$${fmt(lo, 2)} – $${fmt(hi, 2)}`; }
 
+function syncBladderState() {
+  const withBladder = document.getElementById('in-with-bladder').checked;
+  const shellSel = document.getElementById('in-shell-mat');
+  const uncoatedOpt = shellSel.querySelector('option[value="uncoated"]');
+  const tpuField = document.getElementById('field-tpu');
+  const tpuSel = document.getElementById('in-tpu');
+
+  if (!withBladder) {
+    if (shellSel.value === 'uncoated') shellSel.value = 'tpu';
+    uncoatedOpt.disabled = true;
+    tpuField.classList.add('is-disabled');
+    tpuSel.disabled = true;
+  } else {
+    uncoatedOpt.disabled = false;
+    tpuField.classList.remove('is-disabled');
+    tpuSel.disabled = false;
+  }
+  return withBladder;
+}
+
 function update() {
+  const withBladder = syncBladderState();
+  const shellMat = document.getElementById('in-shell-mat').value;
   const liftKg = Math.max(0.01, parseFloat(document.getElementById('in-lift').value) || 2);
   const ar = Math.max(0.05, Math.min(0.4, parseFloat(document.getElementById('in-ar').value) || 0.175));
   const tpu = parseInt(document.getElementById('in-tpu').value);
@@ -554,7 +638,7 @@ function update() {
   const elevation = Math.max(1, parseFloat(document.getElementById('in-elevation').value) || 20);
   const numTethers = Math.max(1, parseInt(document.getElementById('in-tethers').value) || 3);
 
-  const r = solve(liftKg, ar, tpu, ripstop, hePrice, elevation, numTethers);
+  const r = solve(liftKg, ar, tpu, ripstop, hePrice, elevation, numTethers, withBladder, shellMat);
 
   document.getElementById('out-bladder-d').textContent = fmtDual(r.bladderD_m, r.bladderD_ft, 2);
   document.getElementById('out-total-d').textContent = fmtDual(r.totalD_m, r.totalD_ft, 2);
@@ -563,6 +647,18 @@ function update() {
   document.getElementById('out-he-vol').textContent = `${fmt(r.volL, 1)} L (${fmt(r.volCuFt, 1)} cu ft)`;
   document.getElementById('out-he-mass').textContent = `${fmt(r.heMassKg, 3)} kg`;
   document.getElementById('out-gross-lift').textContent = `${fmt(r.grossLiftKg, 3)} kg`;
+
+  const shellWtLabel = !withBladder
+    ? 'Envelope (TPU-coated ripstop)'
+    : (shellMat === 'tpu' ? 'Shell (TPU-coated ripstop)' : 'Shell (ripstop nylon)');
+  const shellCostLabel = !withBladder
+    ? 'Envelope material'
+    : 'Shell material';
+  document.getElementById('lbl-shell-wt').textContent = shellWtLabel;
+  document.getElementById('lbl-cost-shell').textContent = shellCostLabel;
+
+  document.getElementById('row-bladder-wt').style.display = withBladder ? '' : 'none';
+  document.getElementById('row-cost-bladder').style.display = withBladder ? '' : 'none';
 
   document.getElementById('out-bladder-wt').textContent = `${fmt(r.bladderMassKg, 3)} kg`;
   document.getElementById('out-shell-wt').textContent = `${fmt(r.shellMassKg, 3)} kg`;
@@ -578,8 +674,9 @@ function update() {
   document.getElementById('out-assume-he').textContent = `$${fmt(hePrice, 2)} / cu ft`;
 }
 
-document.querySelectorAll('#in-lift, #in-ar, #in-tpu, #in-ripstop, #in-he-price, #in-elevation, #in-tethers')
+document.querySelectorAll('#in-lift, #in-ar, #in-tpu, #in-ripstop, #in-he-price, #in-elevation, #in-tethers, #in-with-bladder, #in-shell-mat')
   .forEach(el => el.addEventListener('input', update));
+document.getElementById('in-with-bladder').addEventListener('change', update);
 
 update();
 </script>
